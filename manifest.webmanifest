@@ -1,0 +1,32 @@
+{
+  "name": "My Glow Up training programme",
+  "short_name": "Glow Up",
+  "id": "/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF7FB",
+  "theme_color": "#FFF7FB",
+  "description": "Персональна силова програма: сідниці, спина, ноги, плечі та прес. 3 тренування на тиждень з подвійною прогресією.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
