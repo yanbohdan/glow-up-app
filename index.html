@@ -610,10 +610,10 @@
       warmup: "Розминка 5–7 хв: суглобова розминка, 15–20 відведень ніг з резинкою.",
       cooldown: "Заминка (МФР) 5–10 хв: прокатка спини та сідничних м'язів роликом.",
       exercises: [
-        {id:"glute_bridge",  name:"Сідничний міст (з лави)",  desc:"Старт 12 кг · гантель на таз через рушник, фіксація вгорі 2 сек.", sets:4, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"bridge"},
-        {id:"rdl",           name:"Румунська тяга",           desc:"2 гантелі по 7 кг · рівна спина, таз максимально відводиться назад.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"hinge"},
-        {id:"bent_row",      name:"Тяга гантелі в нахилі",    desc:"1 гантель 8–10 кг · опора коліном і рукою на лаву, тяга до пояса (на руку).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"row"},
-        {id:"good_morning",  name:"Гудморнінг (нахили)",      desc:"1 гантель 5–7 кг або резинка · гантель біля грудей, рух за рахунок відведення тазу.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"hinge", optionalLastSet:true}
+        {id:"glute_bridge",  name:"Сідничний міст (з лави)",  desc:"Старт 12 кг · гантель на таз через рушник, фіксація вгорі 2 сек.", sets:4, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"bridge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-hip-thrust-front.mp4"},
+        {id:"rdl",           name:"Румунська тяга",           desc:"2 гантелі по 7 кг · рівна спина, таз максимально відводиться назад.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"hinge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-romanian-deadlift-side.mp4"},
+        {id:"bent_row",      name:"Тяга гантелі в нахилі",    desc:"1 гантель 8–10 кг · опора коліном і рукою на лаву, тяга до пояса (на руку).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"row", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-kneeling-single-arm-row-side.mp4"},
+        {id:"good_morning",  name:"Гудморнінг (нахили)",      desc:"1 гантель 5–7 кг або резинка · гантель біля грудей, рух за рахунок відведення тазу.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"hinge", optionalLastSet:true, media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-goblet-good-morning-side.mp4"},
       ]
     },
     day2: {
@@ -621,11 +621,11 @@
       warmup: "Розминка 5–7 хв: загальна суглобова розминка.",
       cooldown: null,
       exercises: [
-        {id:"bulgarian_lunge", name:"Болгарські випади",       desc:"0–5 кг на руку · задня нога на лаві, корпус злегка нахилений уперед (на ногу).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"lunge"},
-        {id:"seated_press",    name:"Жим гантелей сидячи",     desc:"2 гантелі по 5 кг · спина спирається на лаву, жим вгору над головою.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:60, exIcon:"press"},
-        {id:"side_leg_raise",  name:"Відведення ноги вбік",    desc:"Фітнес-резинка · стоячи біля опори, акцент на верхню частину сідниць.", sets:3, repsMin:15, repsMax:20, type:"bodyweight", rest:60, exIcon:"band"},
-        {id:"hanging_raise",   name:"Підйоми ніг у висі",      desc:"На турніку · підйом колін або прямих ніг до паралелі.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"hangraise", optionalLastSet:true},
-        {id:"plank",           name:"Планка",                  desc:"Тіло в одну лінію, прес та сідниці максимально напружені.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"45–60 сек", rest:60, exIcon:"plank"}
+        {id:"bulgarian_lunge", name:"Болгарські випади",       desc:"0–5 кг на руку · задня нога на лаві, корпус злегка нахилений уперед (на ногу).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"lunge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-bulgarian-split-squat-side.mp4"},
+        {id:"seated_press",    name:"Жим гантелей сидячи",     desc:"2 гантелі по 5 кг · спина спирається на лаву, жим вгору над головою.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:60, exIcon:"press", media: "https://musclewiki.com/api-next/videos/female-dumbbell-seated-overhead-press-front.mp4"},
+        {id:"side_leg_raise",  name:"Відведення ноги вбік",    desc:"Фітнес-резинка · стоячи біля опори, акцент на верхню частину сідниць.", sets:3, repsMin:15, repsMax:20, type:"bodyweight", rest:60, exIcon:"band", media: "https://cdn.motra.com/exercise-assets/8fb874a556/mobile/playlist.m3u8"},
+        {id:"hanging_raise",   name:"Підйоми ніг у висі",      desc:"На турніку · підйом колін або прямих ніг до паралелі.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"hangraise", optionalLastSet:true, media: "https://i0.wp.com/www.strengthlog.com/wp-content/uploads/2020/03/hanging-leg-raise.gif?resize=600%2C600&ssl=1"},
+        {id:"plank",           name:"Планка",                  desc:"Тіло в одну лінію, прес та сідниці максимально напружені.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"45–60 сек", rest:60, exIcon:"plank", media: "https://musclewiki.com/api-next/videos/female-Bodyweight-hand-plank-front.mp4"}
       ]
     },
     day3: {
@@ -633,11 +633,11 @@
       warmup: "Розминка 5–7 хв: загальна суглобова розминка.",
       cooldown: null,
       exercises: [
-        {id:"glute_bridge_heavy", name:"Сідничний міст (силовий)", desc:"12–15 кг · робота з більшою вагою для стимуляції росту.", sets:3, repsMin:8, repsMax:10, type:"weight", rest:105, exIcon:"bridge"},
-        {id:"pullup",              name:"Підтягування на турніку",  desc:"Гумова петля (амортизатор) допомагає виштовхувати тіло вгору.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"Макс. повторень", rest:60, exIcon:"pullup"},
-        {id:"pushup",              name:"Віджимання",               desc:"Від лави або з колін · контрольоване опускання, лікті під кутом 45°.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"pushup"},
-        {id:"lateral_raise",       name:"Махи через сторони",       desc:"2 гантелі по 2–3.5 кг · легка вага, плавний рух без розгойдування.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"lateral"},
-        {id:"arm_superset",        name:"Суперсет: Біцепс + Трицепс", desc:"2 гантелі по 3.5–5 кг · згинання на біцепс + розгинання на трицепс без відпочинку.", sets:3, repsMin:12, repsMax:12, type:"weight", rest:45, exIcon:"armcurl"}
+        {id:"glute_bridge_heavy", name:"Сідничний міст (силовий)", desc:"12–15 кг · робота з більшою вагою для стимуляції росту.", sets:3, repsMin:8, repsMax:10, type:"weight", rest:105, exIcon:"bridge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-hip-thrust-side.mp4"},
+        {id:"pullup",              name:"Підтягування на турніку",  desc:"Гумова петля (амортизатор) допомагає виштовхувати тіло вгору.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"Макс. повторень", rest:60, exIcon:"pullup", media: "https://powerbands.com.au/cdn/shop/products/assisted-pull-up-pack-654951.jpg?v=1670824182&width=810"},
+        {id:"pushup",              name:"Віджимання",               desc:"Від лави або з колін · контрольоване опускання, лікті під кутом 45°.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"pushup", media: "https://musclewiki.com/api-next/videos/female-Bodyweight-push-up-side.mp4"},
+        {id:"lateral_raise",       name:"Махи через сторони",       desc:"2 гантелі по 2–3.5 кг · легка вага, плавний рух без розгойдування.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"lateral", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-lateral-raise-front.mp4", media2: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-lateral-raise-side.mp4"},
+        {id:"arm_superset",        name:"Суперсет: Біцепс + Трицепс", desc:"2 гантелі по 3.5–5 кг · згинання на біцепс + розгинання на трицепс без відпочинку.", sets:3, repsMin:12, repsMax:12, type:"weight", rest:45, exIcon:"armcurl", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-curl-side.mp4", media2: "https://musclewiki.com/api-next/videos/female-dumbbell-tricep-kickback-side.mp4"}
       ]
     }
   };
@@ -1447,7 +1447,10 @@
         html += '<div class="flag-banner">' + FLAG_ICON + ' Минулого разу — межа повторень в усіх підходах. Час додати вагу.</div>';
       }
 
-      html += buildMediaSectionHTML(ex, getMedia(ex.id));
+      html += buildMediaSectionHTML(ex, getMedia(ex.id) || ex.media);
+      if (ex.media2) {
+  html += buildMediaEmbedHTML(ex.media2);
+}
 
       html += '<div class="sets-wrap">';
       for(var i = 0; i < ex.sets; i++){
