@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Glow Up">
-<meta name="theme-color" content="#FFF7FB">
+<meta name="theme-color" content="#FFE1EC" id="themeColorMeta">
 <title>My Glow Up training programme</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -17,38 +17,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FFF7FB;
+    --bg: linear-gradient(145deg, #FFE1EC 0%, #E1F4FD 100%);
+    --bg-solid: #FFE1EC;
+    --bg-trans: rgba(255, 225, 236, 0);
     --panel:#FFFFFF;
-    --panel-2:#FFF0F6;
-    --panel-3:#FFE3EE;
-    --border:#F7D3E3;
+    --panel-2:rgba(255,255,255,0.65);
+    --panel-3:rgba(255,255,255,0.85);
+    --border:#E1E4E8;
+    
     --text:#5B4356;
     --text-dim:#A688A0;
     --text-dim-2:#CBACC3;
     --primary:#FF8FB4;
     --primary-dim:#FFE1EC;
+    
     --day1:#FF8FB4;       --day1-dim:#FFE1EC;       --day1-soft:rgba(255,143,180,0.16);
     --day2:#59C1EE;       --day2-dim:#E1F4FD;       --day2-soft:rgba(89,193,238,0.16);
     --day3:#B393E8;       --day3-dim:#EFE5FB;       --day3-soft:rgba(179,147,232,0.16);
     --flag:#FFB454;
+    
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{margin:0; padding:0; height:100%;}
   body{
-    background:
-      radial-gradient(900px 420px at 15% -8%, rgba(255,143,180,0.14), transparent 55%),
-      radial-gradient(700px 380px at 100% 0%, rgba(89,193,238,0.10), transparent 55%),
-      repeating-linear-gradient(135deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 5px),
-      var(--bg);
+    background: var(--bg);
+    background-attachment: fixed;
     color:var(--text);
     font-family:"Inter", -apple-system, sans-serif;
     overscroll-behavior-y: none;
     -webkit-font-smoothing:antialiased;
     -webkit-overflow-scrolling: touch;
+    transition: background 0.35s ease;
   }
-  #app{ contain: layout style; }
+  #app{ transform: translateZ(0); }
   .disp{ font-family:"Bebas Neue", "Inter", sans-serif; font-weight:400; letter-spacing:0.01em; }
   #app{
     max-width:560px;
@@ -61,7 +64,7 @@
   }
   h1,h2,h3{margin:0;}
 
-  @keyframes viewIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+  @keyframes viewIn{ from{ opacity:0; transform:translateY(10px) translateZ(0);} to{ opacity:1; transform:translateY(0) translateZ(0);} }
   #app.entering{ animation: viewIn .38s cubic-bezier(.2,.7,.3,1); }
 
   @keyframes flagGlow{
@@ -69,23 +72,19 @@
     50%{ box-shadow:0 0 0 1px rgba(255,197,61,0.55), 0 0 22px rgba(255,197,61,0.28); }
   }
 
-  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px) scale(0.98);} to{ opacity:1; transform:translateY(0) scale(1);} }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px) scale(0.98) translateZ(0);} to{ opacity:1; transform:translateY(0) scale(1) translateZ(0);} }
   @keyframes fadeIn{ from{ opacity:0;} to{ opacity:1;} }
   .stagger{ opacity:0; animation: cardIn .5s cubic-bezier(.2,.7,.3,1) forwards; }
-  /* Картки вправ: лише легке проявлення без зсуву, і майже без затримки —
-     щоб список виглядав як одне суцільне полотно навіть якщо гортати відразу. */
   .exercise-card.stagger{ animation: fadeIn .3s ease-out forwards; contain:layout paint; }
   .exercise-card.stagger.flagged{ animation: fadeIn .3s ease-out forwards, flagGlow 2.6s ease-in-out .5s infinite; }
 
   @keyframes segPop{ 0%{ transform:scaleY(1);} 40%{ transform:scaleY(2.1);} 100%{ transform:scaleY(1);} }
   .ex-seg.pop{ animation: segPop .32s cubic-bezier(.3,1.5,.5,1); }
 
-  @keyframes numberIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
-
   @keyframes btnPress{ 0%{ transform:scale(1);} 50%{ transform:scale(0.9);} 100%{ transform:scale(1);} }
   .stepper button.pressed{ animation: btnPress .22s ease; }
 
-  @keyframes chevronNudge{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(3px);} }
+  @keyframes chevronNudge{ 0%,100%{ transform:translateX(0) translateZ(0);} 50%{ transform:translateX(3px) translateZ(0);} }
   .day-card:hover .chevron{ animation: chevronNudge 0.9s ease-in-out infinite; }
 
   @media (prefers-reduced-motion: reduce){
@@ -102,12 +101,12 @@
     filter:drop-shadow(0 2px 10px rgba(255,143,180,0.35));
     letter-spacing:0.005em;
   }
-  .home-hero .tagline{ color:var(--text-dim); font-size:14px; margin-top:10px; max-width:340px; line-height:1.5; }
+  .home-hero .tagline{ color:var(--text-dim); font-size:14px; margin-top:10px; width: 100%; line-height:1.5; }
   .barbell{ display:block; margin-top:16px; width:100%; height:14px; opacity:0.9; }
 
   .section-title{ font-size:13px; color:var(--text-dim); font-weight:600; margin-bottom:14px; }
 
-  /* ---------- INSTALL / ROTATION BANNERS ---------- */
+  /* ---------- BANNERS ---------- */
   .install-banner{
     display:flex; align-items:center; gap:10px;
     background:var(--panel-2); border:1px solid var(--border); border-radius:14px;
@@ -136,8 +135,11 @@
 
   .rotation-banner{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
-    background:linear-gradient(120deg, var(--panel-2), var(--panel));
+    background: var(--panel-2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:16px;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
   .rotation-banner .rb-label{ font-size:10.5px; color:var(--text-dim-2); text-transform:uppercase; letter-spacing:0.06em; }
   .rotation-banner .rb-day{ font-size:24px; margin-top:2px; }
@@ -146,15 +148,15 @@
   .day-card{
     position:relative;
     display:flex; justify-content:space-between; align-items:center;
-    background: linear-gradient(155deg, var(--panel-2) 0%, var(--panel) 65%);
-    border:1px solid var(--border);
+    background: linear-gradient(155deg, var(--accent-dim) 0%, var(--panel) 75%);
+    border:1px solid var(--accent-soft);
     border-radius:16px;
     padding:20px 18px;
     margin-bottom:14px;
     cursor:pointer;
     transition: transform .15s cubic-bezier(.2,.7,.3,1), box-shadow .15s ease;
     overflow:hidden;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
   }
   .day-card::before{
     content:"";
@@ -162,7 +164,7 @@
     background: radial-gradient(140px 140px at 100% 0%, var(--accent-soft, transparent), transparent 70%);
     pointer-events:none;
   }
-  .day-card:active{ transform: scale(0.97); }
+  .day-card:active{ transform: scale(0.97) translateZ(0); }
   .day-card .day-left{ display:flex; align-items:center; gap:16px; position:relative; z-index:1; }
   .day-icon{
     width:54px; height:54px; border-radius:14px; flex-shrink:0;
@@ -185,7 +187,8 @@
 
   /* ---------- CALENDAR / HISTORY ---------- */
   .panel-card{
-    background:linear-gradient(155deg, var(--panel-2) 0%, var(--panel) 70%);
+    background: var(--panel-2);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:14px;
   }
   .calendar-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
@@ -210,43 +213,16 @@
   .calendar-legend .dot{ width:8px; height:8px; border-radius:2px; display:inline-block; margin-right:4px; vertical-align:middle; }
 
   .history-list{ display:flex; flex-direction:column; gap:8px; margin-top:16px; }
-  .history-row{ display:flex; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--text-dim); }
+  .history-row{ display:flex; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--text-dim); }
   .history-row .dot{ width:10px; height:10px; border-radius:3px; flex-shrink:0; }
   .history-row b{ color:var(--text); }
   .history-empty{ color:var(--text-dim-2); font-size:12.5px; text-align:center; padding:14px 0; }
-
-  /* ---------- NUTRITION ---------- */
-  .nutrition-tip{
-    display:flex; align-items:flex-start; gap:9px;
-    background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
-    padding:11px 13px; margin-bottom:14px; font-size:12.5px; color:var(--text-dim); line-height:1.5;
-  }
-  .nutrition-tip svg{ flex-shrink:0; width:17px; height:17px; margin-top:1px; color:var(--primary); }
-  .kbju-label{ font-size:11px; color:var(--text-dim-2); font-weight:600; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em; }
-  .kbju-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-  .kbju-field{ display:flex; flex-direction:column; gap:4px; font-size:10.5px; color:var(--text-dim-2); }
-  .kbju-field input{
-    background:var(--panel-2); border:1px solid var(--border); border-radius:9px; color:var(--text);
-    padding:9px 8px; font-size:14px; font-family:"Bebas Neue", sans-serif; text-align:center;
-    -moz-appearance:textfield;
-  }
-  .kbju-field input::-webkit-outer-spin-button, .kbju-field input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
-  .kbju-field input:focus{ outline:none; border-color:var(--primary); }
-  .kbju-field.wide{ grid-column:span 3; }
-  .kbju-advice{
-    margin-top:12px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
-    padding:11px 13px; font-size:12.5px; color:var(--text); line-height:1.55;
-  }
-  .kbju-advice ul{ margin:0; padding-left:16px; }
-  .kbju-advice li{ margin-bottom:6px; }
-  .kbju-advice li:last-child{ margin-bottom:0; }
-  .kbju-note{ font-size:10.5px; color:var(--text-dim-2); margin-top:8px; line-height:1.4; }
 
   /* ---------- BACKUP ---------- */
   .backup-note{ font-size:12px; color:var(--text-dim-2); margin-bottom:12px; line-height:1.5; }
   .backup-actions{ display:flex; gap:10px; }
   .backup-btn{
-    flex:1; background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    flex:1; background:var(--panel); border:1px solid var(--border); color:var(--text);
     border-radius:12px; padding:13px; font-family:"Bebas Neue", sans-serif; font-size:15px;
     display:flex; align-items:center; justify-content:center; gap:7px; text-align:center; cursor:pointer;
   }
@@ -255,10 +231,11 @@
   /* ---------- WORKOUT VIEW ---------- */
   .wo-header{
     position:sticky; top:0;
-    background:linear-gradient(var(--bg) 80%, transparent);
+    /* Використовуємо суцільні кольори для градієнта, щоб уникнути проблеми прозорості під час скролу */
+    background:linear-gradient(var(--bg-solid) 80%, var(--bg-trans));
     padding-top: calc(var(--safe-top) + 10px);
     padding-bottom:16px;
-    z-index:5;
+    z-index:10;
     display:flex; align-items:center; gap:12px;
     margin-bottom:18px;
   }
@@ -290,6 +267,7 @@
     border-radius:16px;
     padding:18px;
     margin-bottom:14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
   }
   .exercise-card.flagged{ animation: flagGlow 2.6s ease-in-out infinite; }
   .ex-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
@@ -302,12 +280,17 @@
   .ex-icon-badge svg{ width:20px; height:20px; }
   .ex-name{ font-size:16.5px; font-weight:700; letter-spacing:-0.01em; }
   .ex-desc{ color:var(--text-dim); font-size:12px; margin-top:2px;}
+  
   .wo-note{
     display:flex; align-items:center; gap:9px;
-    background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
-    padding:11px 13px; margin-bottom:14px; font-size:12.5px; color:var(--text-dim); line-height:1.45;
+    background:var(--panel-2); 
+    border:2px solid var(--accent); 
+    box-shadow: 0 4px 14px var(--accent-soft);
+    border-radius:12px;
+    padding:11px 13px; margin-bottom:14px; font-size:12.5px; color:var(--text); line-height:1.45; font-weight: 500;
   }
-  .wo-note svg{ flex-shrink:0; width:18px; height:18px; color:var(--accent); }
+  .wo-note svg{ flex-shrink:0; width:22px; height:22px; color:var(--accent); }
+  
   .prescription{
     flex-shrink:0; font-family:"Bebas Neue", sans-serif; font-size:16px; letter-spacing:0.02em;
     background:var(--accent-soft); color:var(--accent);
@@ -333,77 +316,81 @@
   }
   .flag-banner svg{ flex-shrink:0; }
 
-  .sets-wrap{ margin-top:16px; display:flex; flex-direction:column; gap:10px; }
-  .set-row{ display:flex; align-items:center; gap:8px; }
+  /* ---------- GLOBAL WEIGHT & BODYWEIGHT ---------- */
+  .global-weight-row { 
+    display: flex; gap: 10px; align-items: center; 
+    margin-top: 18px; margin-bottom: 8px; 
+  }
+  .global-weight-spacer { width: 34px; flex-shrink: 0; }
+  .global-weight-row .field-group { 
+    flex: 1; padding: 12px 16px; border-radius: 12px; background: var(--panel-2); 
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .global-weight-row .field-group:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .global-weight-row .field-label { font-size: 13.5px; color: var(--text-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .global-weight-row input[type=number] {
+    width: 80px; background: transparent; border: none; color: var(--text);
+    font-family: "Bebas Neue", sans-serif; font-size: 26px; text-align: right; -moz-appearance: textfield; appearance: textfield;
+  }
+  .global-weight-row input[type=number]::-webkit-outer-spin-button,
+  .global-weight-row input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; appearance:none; margin:0; }
+  .global-weight-row input:focus{ outline:none; }
+  .global-weight-row .unit { font-size: 14px; font-weight: 700; color: var(--text-dim); margin-left: 6px; }
+
+  .bodyweight-tag {
+    flex: 1;
+    font-size: 13.5px; font-weight: 600; color: var(--text-dim); 
+    background: var(--panel-2); border: 1px solid var(--border); 
+    padding: 12px 16px; border-radius: 12px; 
+    text-align: center; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+
+  .sets-wrap{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
+  .set-row{ display:flex; align-items:center; gap:10px; }
   .set-row.optional{ opacity:0.68; }
   .set-num-badge{
-    width:26px; height:26px; border-radius:8px; flex-shrink:0;
+    width:34px; height:34px; border-radius:10px; flex-shrink:0;
     background:var(--panel-3); color:var(--text-dim);
     display:flex; align-items:center; justify-content:center;
-    font-family:"Bebas Neue", sans-serif; font-size:14px;
+    font-family:"Bebas Neue", sans-serif; font-size:16px;
     position:relative;
   }
   .set-opt-dot{ position:absolute; top:-3px; right:-3px; width:8px; height:8px; border-radius:50%; background:var(--text-dim-2); border:2px solid var(--panel); }
 
-  .field-group{ flex:1; display:flex; align-items:center; gap:6px; background:var(--panel-2); border-radius:10px; padding:7px 10px; border:1px solid var(--border); transition:border-color .15s ease, box-shadow .15s ease; }
-  .field-group:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
-  .field-label{ font-size:10.5px; color:var(--text-dim-2); flex-shrink:0; }
-  .field-group input[type=number]{
-    width:100%; background:transparent; border:none; color:var(--text);
-    font-family:"Bebas Neue", sans-serif; font-size:19px; text-align:center; -moz-appearance:textfield;
-  }
-  .field-group input[type=number]::-webkit-outer-spin-button,
-  .field-group input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
-  .field-group input:focus{ outline:none; }
-
-  .stepper{ display:flex; align-items:center; gap:3px; flex:1.35; background:var(--panel-2); border-radius:10px; padding:5px; border:1px solid var(--border); }
+  .stepper{ display:flex; align-items:center; gap:4px; flex:1; background:var(--panel-2); border-radius:12px; padding:6px; border:1px solid var(--border); }
   .stepper button{
-    width:34px; height:34px; border-radius:8px; border:none;
-    background:var(--panel-3); color:var(--text); font-size:18px; font-weight:700;
-    flex-shrink:0;
+    width:42px; height:42px; border-radius:10px; border:none;
+    background:var(--panel-3); color:var(--text); font-size:22px; font-weight:700;
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
   }
   .stepper button:active{ background:var(--accent); color:var(--text); }
   .stepper .reps-input{
-    flex:1; min-width:0; text-align:center; font-family:"Bebas Neue", sans-serif; font-size:19px;
-    background:transparent; border:none; color:var(--text); -moz-appearance:textfield;
+    flex:1; min-width:0; text-align:center; font-family:"Bebas Neue", sans-serif; font-size:24px;
+    background:transparent; border:none; color:var(--text); -moz-appearance:textfield; appearance: textfield;
   }
   .stepper .reps-input:focus{ outline:none; }
   .stepper .reps-input::-webkit-outer-spin-button,
-  .stepper .reps-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
-  .reps-label{ font-size:10px; color:var(--text-dim-2); }
-
-  .bodyweight-tag{ font-size:10.5px; color:var(--text-dim-2); background:var(--panel-2); border:1px solid var(--border); padding:4px 8px; border-radius:8px; }
+  .stepper .reps-input::-webkit-inner-spin-button{ -webkit-appearance:none; appearance: none; margin:0; }
 
   /* ---------- МЕДІА ВПРАВИ ---------- */
   .ex-media-frame{
     margin-top:12px; border-radius:12px; overflow:hidden; background:var(--panel-2);
-    border:1px solid var(--border); aspect-ratio:16/9; position:relative;
+    border: 2px solid var(--accent); 
+    box-shadow: 0 4px 12px var(--accent-soft);
+    aspect-ratio:16/9; position:relative;
   }
   .ex-media-frame img, .ex-media-frame video, .ex-media-frame iframe{
-    width:100%; height:100%; display:block; object-fit:cover; border:none;
+    width:100%; height:100%; display:block; object-fit:cover; border:none; pointer-events: none;
   }
-  .ex-media-error{ display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-dim-2); font-size:12px; padding:10px; text-align:center; }
-  .ex-media-toggle{
-    display:flex; align-items:center; gap:6px; margin-top:10px; background:none; border:none;
-    color:var(--accent); font-size:12px; font-weight:600; padding:4px 0;
-  }
-  .ex-media-toggle svg{ width:15px; height:15px; }
-  .ex-media-editor{ display:none; margin-top:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:11px; }
-  .ex-media-editor.show{ display:block; }
-  .ex-media-editor-row{ display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:9px 11px; }
-  .ex-media-editor-row svg{ flex-shrink:0; width:15px; height:15px; color:var(--text-dim-2); }
-  .ex-media-input{ flex:1; min-width:0; background:transparent; border:none; color:var(--text); font-size:12.5px; }
-  .ex-media-input:focus{ outline:none; }
-  .ex-media-editor-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:9px; gap:8px; }
-  .ex-media-remove-btn{ background:none; border:none; color:#E8555A; font-size:12px; font-weight:600; padding:6px 4px; }
-  .ex-media-save-btn{ background:var(--accent); color:var(--text); border:none; border-radius:9px; padding:9px 16px; font-family:"Bebas Neue", sans-serif; font-size:13.5px; letter-spacing:0.03em; }
 
   .bottom-actions{
     position:sticky; bottom:0;
-    background:linear-gradient(to top, var(--bg) 60%, transparent);
+    background:linear-gradient(to top, var(--bg-solid) 60%, var(--bg-trans));
     padding-top:18px;
     padding-bottom: calc(var(--safe-bottom) + 6px);
     display:flex; gap:10px;
+    z-index:10;
   }
   .btn{
     flex:1; border:none; border-radius:13px; padding:17px; font-size:14.5px; font-weight:700;
@@ -428,7 +415,7 @@
   .timer-fab{
     position:fixed;
     right:18px;
-    bottom:calc(var(--safe-bottom) + 92px);
+    bottom:calc(var(--safe-bottom) + 110px);
     width:58px; height:58px; border-radius:50%;
     background:linear-gradient(135deg, var(--accent), var(--accent) 70%);
     color:var(--text);
@@ -436,6 +423,7 @@
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 8px 24px var(--accent-glow), 0 2px 8px rgba(0,0,0,0.4);
     z-index:45;
+    transform: translateZ(0);
   }
   .timer-fab:active{ filter:brightness(0.92); }
   .timer-fab svg{ width:26px; height:26px; }
@@ -443,7 +431,7 @@
   .timer-fab-icon{ display:flex; }
 
   .timer-overlay{
-    position:fixed; inset:0; background:rgba(120,80,110,0.35); backdrop-filter:blur(3px);
+    position:fixed; inset:0; background:rgba(120,80,110,0.35); backdrop-filter:blur(3px); -webkit-backdrop-filter: blur(3px);
     display:flex; align-items:center; justify-content:center; padding:20px;
     opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:70;
   }
@@ -452,9 +440,9 @@
     position:relative; width:100%; max-width:340px;
     background:linear-gradient(155deg, var(--panel-2) 0%, var(--panel) 70%);
     border:1px solid var(--border); border-radius:20px; padding:24px 20px 20px;
-    transform:translateY(12px); transition:transform .2s ease;
+    transform:translateY(12px) translateZ(0); transition:transform .2s ease;
   }
-  .timer-overlay.show .timer-panel{ transform:translateY(0); }
+  .timer-overlay.show .timer-panel{ transform:translateY(0) translateZ(0); }
   .timer-close{
     position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%;
     background:var(--panel-3); border:1px solid var(--border); color:var(--text-dim);
@@ -488,7 +476,7 @@
   .editor-row-top{ display:flex; gap:8px; align-items:center; }
   .ed-name{
     flex:1; background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
-    padding:10px 12px; color:var(--text); font-size:14px; font-weight:600; min-width:0;
+    padding:10px 12px; color:var(--text); font-size:16px; font-weight:600; min-width:0;
   }
   .ed-name:focus{ outline:none; border-color:var(--accent); }
   .ed-delete{
@@ -500,13 +488,13 @@
   .editor-field-sm{ display:flex; flex-direction:column; gap:4px; font-size:10.5px; color:var(--text-dim-2); }
   .editor-field-sm select, .editor-field-sm input{
     background:var(--panel-2); border:1px solid var(--border); border-radius:9px; color:var(--text);
-    padding:8px 9px; font-size:13.5px;
+    padding:8px 9px; font-size:16px;
   }
   .editor-optional-toggle{ display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12px; color:var(--text-dim); }
   .add-ex-btn{
     display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
     background:var(--panel-2); border:1px dashed var(--border); color:var(--text-dim);
-    border-radius:14px; padding:14px; font-size:13.5px; font-weight:600; margin-top:12px;
+    border-radius:14px; padding:14px; font-size:14px; font-weight:600; margin-top:12px;
   }
   .add-ex-btn svg{ width:16px; height:16px; }
   .restore-default-btn{
@@ -520,8 +508,50 @@
 <div class="toast" id="toast"></div>
 
 <script>
+try {
 (function(){
   "use strict";
+
+  // ---------------- ЗВУК ТА ВІБРАЦІЯ ДЛЯ iOS/ANDROID ----------------
+  var audioCtx = null;
+  function unlockAudio() {
+    if (!audioCtx) {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(Ctx) {
+        audioCtx = new Ctx();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        gain.gain.value = 0;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if(osc.start) osc.start(0); else osc.noteOn(0);
+        setTimeout(function(){ osc.disconnect(); }, 100);
+      }
+    }
+    if(audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+  document.addEventListener('touchstart', unlockAudio, {once:true, passive:true});
+  document.addEventListener('click', unlockAudio, {once:true, passive:true});
+
+  function vibrateDevice(){ try{ if(navigator.vibrate){ navigator.vibrate([300, 200, 300, 200, 500]); } }catch(e){} }
+  function playBeepSequence(){
+    try{
+      if(!audioCtx) return;
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      [0, 0.28, 0.56].forEach(function(t){
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.type = "sine"; osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + t);
+        gain.gain.exponentialRampToValueAtTime(0.4, audioCtx.currentTime + t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + t + 0.22);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + t); osc.stop(audioCtx.currentTime + t + 0.25);
+      });
+    }catch(e){}
+  }
 
   // ---------------- ІКОНКИ ----------------
   var ICONS = {
@@ -571,11 +601,7 @@
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
     timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>',
     download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
-    upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M5 3h14"/></svg>',
-    leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4 20 2c1 3.5.5 8-2 11-2.5 2.5-4.5 3.5-7 7z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9 14.63 11 13.03 12 11"/></svg>',
-    camera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>',
-    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
-    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>'
+    upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M7 14l5-5 5 5"/><path d="M5 3h14"/></svg>'
   };
   var FLAG_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18"/><path d="M5 4h11l-2.5 4L16 12H5"/></svg>';
   var BARBELL = '<svg class="barbell" viewBox="0 0 320 16" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">' +
@@ -586,7 +612,6 @@
     '<circle cx="306" cy="8" r="2.6" fill="#FF8FB4"/>' +
   '</svg>';
 
-  // ---------------- ІКОНКИ-ПІКТОГРАМИ ВПРАВ (візуалізація руху) ----------------
   var EX_ICONS = {
     bridge:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="4.3" cy="15" r="1.5"/><path d="M5.8 15 L9.5 15"/><path d="M9.5 15 Q13 8.2 16.5 15"/><path d="M16.5 15 L16.5 19.3"/><path d="M12.9 15 L12.9 19.3"/></svg>',
     hinge:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="4.5" r="1.5"/><path d="M8 6 L14 13"/><path d="M14 13 L14 20"/><path d="M14 13 L19 15"/><path d="M14 20 L10.5 20"/><path d="M14 20 L18 20"/></svg>',
@@ -613,7 +638,7 @@
         {id:"glute_bridge",  name:"Сідничний міст (з лави)",  desc:"Старт 12 кг · гантель на таз через рушник, фіксація вгорі 2 сек.", sets:4, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"bridge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-hip-thrust-front.mp4"},
         {id:"rdl",           name:"Румунська тяга",           desc:"2 гантелі по 7 кг · рівна спина, таз максимально відводиться назад.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:105, exIcon:"hinge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-romanian-deadlift-side.mp4"},
         {id:"bent_row",      name:"Тяга гантелі в нахилі",    desc:"1 гантель 8–10 кг · опора коліном і рукою на лаву, тяга до пояса (на руку).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"row", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-kneeling-single-arm-row-side.mp4"},
-        {id:"good_morning",  name:"Гудморнінг (нахили)",      desc:"1 гантель 5–7 кг або резинка · гантель біля грудей, рух за рахунок відведення тазу.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"hinge", optionalLastSet:true, media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-goblet-good-morning-side.mp4"},
+        {id:"good_morning",  name:"Гудморнінг (нахили)",      desc:"1 гантель 5–7 кг або резинка · гантель біля грудей, рух за рахунок відведення тазу.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"hinge", optionalLastSet:true, media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-goblet-good-morning-side.mp4"}
       ]
     },
     day2: {
@@ -623,8 +648,8 @@
       exercises: [
         {id:"bulgarian_lunge", name:"Болгарські випади",       desc:"0–5 кг на руку · задня нога на лаві, корпус злегка нахилений уперед (на ногу).", sets:3, repsMin:10, repsMax:10, type:"weight", rest:105, exIcon:"lunge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-bulgarian-split-squat-side.mp4"},
         {id:"seated_press",    name:"Жим гантелей сидячи",     desc:"2 гантелі по 5 кг · спина спирається на лаву, жим вгору над головою.", sets:3, repsMin:10, repsMax:12, type:"weight", rest:60, exIcon:"press", media: "https://musclewiki.com/api-next/videos/female-dumbbell-seated-overhead-press-front.mp4"},
-        {id:"side_leg_raise",  name:"Відведення ноги вбік",    desc:"Фітнес-резинка · стоячи біля опори, акцент на верхню частину сідниць.", sets:3, repsMin:15, repsMax:20, type:"bodyweight", rest:60, exIcon:"band", media: "https://cdn.motra.com/exercise-assets/8fb874a556/mobile/playlist.m3u8"},
-        {id:"hanging_raise",   name:"Підйоми ніг у висі",      desc:"На турніку · підйом колін або прямих ніг до паралелі.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"hangraise", optionalLastSet:true, media: "https://i0.wp.com/www.strengthlog.com/wp-content/uploads/2020/03/hanging-leg-raise.gif?resize=600%2C600&ssl=1"},
+        {id:"side_leg_raise",  name:"Відведення ноги вбік",    desc:"Фітнес-резинка · стоячи біля опори, акцент на верхню частину сідниць.", sets:3, repsMin:15, repsMax:20, type:"bodyweight", rest:60, exIcon:"band", media: "https://tvoymalysh.com.ua/uploads/files/Depositphotos_231316396_s-2019.jpg"},
+        {id:"hanging_raise",   name:"Підйоми ніг у висі",      desc:"На турніку · підйом колін або прямих ніг до паралелі.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"hangraise", optionalLastSet:true, media: "https://gymbeam.sk/blog/wp-content/uploads/2023/06/036.gif"},
         {id:"plank",           name:"Планка",                  desc:"Тіло в одну лінію, прес та сідниці максимально напружені.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"45–60 сек", rest:60, exIcon:"plank", media: "https://musclewiki.com/api-next/videos/female-Bodyweight-hand-plank-front.mp4"}
       ]
     },
@@ -634,7 +659,7 @@
       cooldown: null,
       exercises: [
         {id:"glute_bridge_heavy", name:"Сідничний міст (силовий)", desc:"12–15 кг · робота з більшою вагою для стимуляції росту.", sets:3, repsMin:8, repsMax:10, type:"weight", rest:105, exIcon:"bridge", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-hip-thrust-side.mp4"},
-        {id:"pullup",              name:"Підтягування на турніку",  desc:"Гумова петля (амортизатор) допомагає виштовхувати тіло вгору.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"Макс. повторень", rest:60, exIcon:"pullup", media: "https://powerbands.com.au/cdn/shop/products/assisted-pull-up-pack-654951.jpg?v=1670824182&width=810"},
+        {id:"pullup",              name:"Підтягування на турніку",  desc:"Гумова петля (амортизатор) допомагає виштовхувати тіло вгору.", sets:3, repsMin:null, repsMax:null, type:"bodyweight", note:"Макс. повторень", rest:60, exIcon:"pullup", media: "https://xcore.com.ua/image/cache/catalog/image/catalog/blog/2024/turnik/strips.webp"},
         {id:"pushup",              name:"Віджимання",               desc:"Від лави або з колін · контрольоване опускання, лікті під кутом 45°.", sets:3, repsMin:10, repsMax:12, type:"bodyweight", rest:60, exIcon:"pushup", media: "https://musclewiki.com/api-next/videos/female-Bodyweight-push-up-side.mp4"},
         {id:"lateral_raise",       name:"Махи через сторони",       desc:"2 гантелі по 2–3.5 кг · легка вага, плавний рух без розгойдування.", sets:3, repsMin:12, repsMax:15, type:"weight", rest:60, exIcon:"lateral", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-lateral-raise-front.mp4", media2: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-lateral-raise-side.mp4"},
         {id:"arm_superset",        name:"Суперсет: Біцепс + Трицепс", desc:"2 гантелі по 3.5–5 кг · згинання на біцепс + розгинання на трицепс без відпочинку.", sets:3, repsMin:12, repsMax:12, type:"weight", rest:45, exIcon:"armcurl", media: "https://musclewiki.com/api-next/videos/female-Dumbbells-dumbbell-curl-side.mp4", media2: "https://musclewiki.com/api-next/videos/female-dumbbell-tricep-kickback-side.mp4"}
@@ -645,19 +670,6 @@
 
   // ---------------- STORAGE ----------------
   var LS_PREFIX = "glow_";
-  var APP_DATA_VERSION = 1; // Підвищуйте лише якщо структура даних дійсно змінюється,
-                            // і додавайте міграцію нижче — існуючі дані ніколи не стираються.
-  (function ensureDataVersion(){
-    try{
-      var raw = localStorage.getItem(LS_PREFIX + "data_version");
-      var current = raw ? JSON.parse(raw) : null;
-      if(current == null){
-        localStorage.setItem(LS_PREFIX + "data_version", JSON.stringify(APP_DATA_VERSION));
-      }
-      // Місце для майбутніх міграцій:
-      // if(current < 2){ /* перетворити старі ключі, нічого не видаляючи без потреби */ }
-    }catch(e){}
-  })();
   function lsGet(key){
     try{
       var raw = localStorage.getItem(LS_PREFIX + key);
@@ -678,109 +690,6 @@
   function clearDraft(dayKey){ lsRemove("draft_" + dayKey); }
   function getDayDate(dayKey){ return lsGet("daydate_" + dayKey); }
   function setDayDate(dayKey, date){ lsSet("daydate_" + dayKey, date); }
-
-  function getMedia(exId){ return lsGet("media_" + exId); }
-  function setMedia(exId, url){ if(url){ lsSet("media_" + exId, url); } else { lsRemove("media_" + exId); } }
-
-  // ---------------- ХАРЧУВАННЯ ТА ВІДНОВЛЕННЯ ----------------
-  // Пул щоденних порад — не статичний текст, кожен день показується інша порада
-  // (детерміновано за днем року, тож вона стабільна протягом усього дня).
-  var NUTRITION_TIPS = [
-    "Білок в кожному прийомі їжі: 20–30 г допомагають м'язам відновлюватись між тренуваннями.",
-    "Вода — головний відновлювальний засіб: тримай під рукою бутлашку, особливо в день тренування.",
-    "Клітковина (овочі, фрукти, цільні злаки) підтримує травлення і довше тримає відчуття ситості.",
-    "Не тренуйся голодною: легкий прийом їжі з білком і вуглеводами за 1–2 години до тренування додає сили.",
-    "Після тренування: білок + вуглеводи протягом 1–2 годин допомагають швидше відновити м'язи.",
-    "Сон 7–8 годин — це не менш важливо, ніж саме тренування: саме уві сні м'язи відновлюються.",
-    "Корисні жири (риба, авокадо, горіхи, олія) потрібні для гормонального балансу — не уникай їх повністю.",
-    "Один \"вільний\" прийом їжі не зіпсує прогрес. Стабільність важливіша за ідеальність.",
-    "М'язовий біль (крепатура) — це нормально, але гострий біль у суглобі — сигнал зменшити вагу чи відпочити.",
-    "Магній і калій (банани, горіхи, зелень) допомагають зменшити судоми та втому в ногах.",
-    "Прогулянки чи легка розтяжка в день відпочинку прискорюють відновлення краще, ніж повний спокій.",
-    "Не забувай про сіль в спеку чи при активному поті — електроліти важливі для самопочуття.",
-    "Регулярність важливіша за кількість: краще стабільно їсти достатньо білка щодня, ніж \"ідеально\" раз на тиждень.",
-    "Гаряча ванна, душ або МФР роликом після тренування допомагають зменшити відчуття забитості м'язів."
-  ];
-  function dayOfYear(d){
-    var start = new Date(d.getFullYear(), 0, 0);
-    var diff = d - start;
-    return Math.floor(diff / 86400000);
-  }
-  function getDailyTip(){
-    return NUTRITION_TIPS[dayOfYear(new Date()) % NUTRITION_TIPS.length];
-  }
-
-  function getKbju(){ return lsGet("kbju") || {}; }
-  function setKbju(data){ lsSet("kbju", data); }
-
-  // Прості орієнтовні поради на основі введених калорій/білків/жирів/вуглеводів
-  // (і, за бажанням, ваги — для розрахунку білка на кг). Це загальні орієнтири,
-  // а не медична рекомендація.
-  function analyzeKbju(k){
-    var cal = Number(k.cal), protein = Number(k.protein), fat = Number(k.fat), carbs = Number(k.carbs), weight = Number(k.weight);
-    var hasCal = k.cal !== "" && k.cal !== undefined && !isNaN(cal);
-    var hasProtein = k.protein !== "" && k.protein !== undefined && !isNaN(protein);
-    var hasFat = k.fat !== "" && k.fat !== undefined && !isNaN(fat);
-    var hasCarbs = k.carbs !== "" && k.carbs !== undefined && !isNaN(carbs);
-    var hasWeight = k.weight !== "" && k.weight !== undefined && !isNaN(weight) && weight > 0;
-
-    if(!hasCal && !hasProtein && !hasFat && !hasCarbs){
-      return ["Введи свої денні калорії або БЖУ вище, щоб отримати персональні орієнтири."];
-    }
-
-    var notes = [];
-
-    if(hasProtein && hasWeight){
-      var perKg = protein / weight;
-      if(perKg < 1.4){
-        notes.push("Білка небагато відносно ваги (" + perKg.toFixed(1) + " г/кг). Для тонусу й відновлення м'язів орієнтир — приблизно 1.6–2.0 г/кг, тобто ≈ " + Math.round(weight * 1.6) + "–" + Math.round(weight * 2.0) + " г/день.");
-      } else if(perKg > 2.2){
-        notes.push("Білка вже досить багато відносно ваги (" + perKg.toFixed(1) + " г/кг) — це не шкідливо, але й наростити понад ≈" + Math.round(weight * 2.0) + " г зазвичай не дає додаткової користі.");
-      } else {
-        notes.push("Білок у хорошому діапазоні відносно ваги (" + perKg.toFixed(1) + " г/кг) — саме те, що потрібно для відновлення після тренувань.");
-      }
-    } else if(hasProtein){
-      notes.push("Вкажи ще й вагу тіла — так можна порівняти твій білок (" + protein + " г) з орієнтиром 1.6–2.0 г на кг ваги.");
-    }
-
-    if(hasFat && hasWeight){
-      var fatPerKg = fat / weight;
-      if(fatPerKg < 0.6){
-        notes.push("Жирів менше, ніж зазвичай радять (орієнтир — від 0.8 г/кг, тобто ≈" + Math.round(weight * 0.8) + " г). Дуже низький рівень жирів надовго може впливати на гормональний баланс.");
-      }
-    }
-
-    if(hasCal && hasWeight){
-      var roughMaintenance = weight * 24; // дуже приблизна оцінка підтримки, не медичний розрахунок
-      var diff = cal - roughMaintenance;
-      if(diff < -500){
-        notes.push("Твої калорії відчутно нижчі за приблизну оцінку підтримки для твоєї ваги (~" + Math.round(roughMaintenance) + " ккал). Великий дефіцit довго тримати важко — прогрес краще йде при м'якому, помірному дефіциті.");
-      } else if(Math.abs(diff) <= 150){
-        notes.push("Твоя калорійність приблизно на рівні підтримки (~" + Math.round(roughMaintenance) + " ккал) — це нормально, якщо ціль зараз не втрата, а тонус і сила.");
-      } else if(diff > 500){
-        notes.push("Твої калорії помітно вищі за приблизну оцінку підтримки (~" + Math.round(roughMaintenance) + " ккал) — це ок для набору форми/сили, просто май це на увазі.");
-      }
-      if(cal > 0 && cal < 1200){
-        notes.push("Дуже низька калорійність (менше 1200 ккал) — за тривалий час це може позначитись на енергії, силі та самопочутті. Якщо це осмислений вибір, варто порадитись з лікарем чи дієтологом.");
-      }
-    } else if(hasCal){
-      notes.push("Додай вагу тіла, щоб порівняти калорії з орієнтовним рівнем підтримки саме для тебе.");
-    }
-
-    if(hasCarbs && carbs < 80 && hasCal && cal > 1400){
-      notes.push("Вуглеводів небагато — саме вони дають енергію для силових тренувань. Якщо відчуваєш втому на тренуванні, спробуй трохи додати їх у дні тренувань.");
-    }
-
-    if(notes.length === 0){
-      notes.push("Дані збережено. Заповни ще поля вище для детальніших орієнтирів.");
-    }
-    return notes;
-  }
-
-  function renderKbjuAdvice(kbju){
-    var notes = analyzeKbju(kbju);
-    return '<ul>' + notes.map(function(n){ return '<li>' + n + '</li>'; }).join('') + '</ul>';
-  }
 
   function getExercises(dayKey){
     var custom = lsGet("custom_" + dayKey);
@@ -836,7 +745,7 @@
     var base = calendarBaseDate();
     var year = base.getFullYear(), month = base.getMonth();
     var firstDay = new Date(year, month, 1);
-    var startWeekday = (firstDay.getDay() + 6) % 7; // Пн = 0
+    var startWeekday = (firstDay.getDay() + 6) % 7; 
     var daysInMonth = new Date(year, month + 1, 0).getDate();
     var hist = getHistory();
     var historyByDate = {};
@@ -889,7 +798,7 @@
     a.click();
     document.body.removeChild(a);
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-    showToast("Файл резервної копії збережено");
+    showToast("Файл збережено");
   }
 
   function importDataFromFile(file){
@@ -897,114 +806,61 @@
     reader.onload = function(){
       try{
         var data = JSON.parse(reader.result);
-        if(!data || typeof data !== "object" || Array.isArray(data)){
-          showToast("Файл порожній або некоректний");
-          return;
-        }
-        var keys = Object.keys(data).filter(function(k){
-          return k.indexOf(LS_PREFIX) === 0 && typeof data[k] === "string";
-        });
-        if(!keys.length){ showToast("Файл порожній або некоректний"); return; }
+        if(!data || typeof data !== "object" || Array.isArray(data)){ showToast("Помилка файлу"); return; }
+        var keys = Object.keys(data).filter(function(k){ return k.indexOf(LS_PREFIX) === 0 && typeof data[k] === "string"; });
+        if(!keys.length){ showToast("Файл порожній"); return; }
         keys.forEach(function(k){ localStorage.setItem(k, data[k]); });
         showToast("Дані відновлено ✓");
         state = lsGet("state") || {view: "home", day: null};
         render();
-      }catch(e){
-        showToast("Не вдалося прочитати файл");
-      }
+      }catch(e){ showToast("Помилка читання"); }
     };
-    reader.onerror = function(){ showToast("Не вдалося прочитати файл"); };
     reader.readAsText(file);
   }
 
-  // ---------------- PWA (встановлення на пристрій) ----------------
-  // Реальні manifest.webmanifest та sw.js — окремі файли поруч із index.html.
-  // Ніяких blob:-заглушок: маніфест і service worker завантажуються як
-  // справжні статичні ресурси, тому застосунок дійсно встановлюється
-  // і дійсно кешується для офлайн-роботи.
-  var deferredInstallPrompt = null;
-  var swUpdateReady = false;
-
-  function setupPWA(){
-    if(!("serviceWorker" in navigator)) return;
-
-    // Прибираємо застарілі реєстрації від старих версій застосунку
-    // (наприклад, попередню імітаційну blob:-версію SW), щоб вони не
-    // конфліктували з реальним sw.js і не тримали старий кеш.
-    navigator.serviceWorker.getRegistrations().then(function(regs){
-      regs.forEach(function(reg){
-        var url = (reg.active && reg.active.scriptURL) ||
-                   (reg.waiting && reg.waiting.scriptURL) ||
-                   (reg.installing && reg.installing.scriptURL) || "";
-        if(url.indexOf("blob:") === 0){ reg.unregister(); }
-      });
-    }).catch(function(){});
-
-    navigator.serviceWorker.register("sw.js").then(function(reg){
-      // Періодично перевіряємо, чи є новіша версія sw.js на сервері.
-      setInterval(function(){ reg.update().catch(function(){}); }, 60 * 60 * 1000);
-
-      reg.addEventListener("updatefound", function(){
-        var installing = reg.installing;
-        if(!installing) return;
-        installing.addEventListener("statechange", function(){
-          if(installing.state === "installed" && navigator.serviceWorker.controller){
-            // Нова версія вже завантажена й чекає активації.
-            swUpdateReady = true;
-            showUpdateBanner();
-          }
-        });
-      });
-    }).catch(function(){});
-
-    var reloadedForUpdate = false;
-    navigator.serviceWorker.addEventListener("controllerchange", function(){
-      if(reloadedForUpdate) return;
-      reloadedForUpdate = true;
-      if(swUpdateReady){ window.location.reload(); }
-    });
-  }
-
-  function showUpdateBanner(){
-    if(document.getElementById("updateBanner")) return;
-    if(state.view !== "home") return;
-    var anchor = app.querySelector(".home-hero");
-    if(!anchor) return;
-    var el = document.createElement("div");
-    el.className = "update-banner stagger";
-    el.id = "updateBanner";
-    el.innerHTML = '<div>Доступне оновлення застосунку.</div>' +
-      '<button type="button" class="update-btn-sm" id="applyUpdateBtn">Оновити</button>';
-    anchor.insertAdjacentElement("afterend", el);
-    document.getElementById("applyUpdateBtn").addEventListener("click", function(){
-      navigator.serviceWorker.getRegistration().then(function(reg){
-        if(reg && reg.waiting){ reg.waiting.postMessage({type: "SKIP_WAITING"}); }
-        else { window.location.reload(); }
-      });
-    });
-  }
-
-  function isStandaloneMode(){
-    try{ return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; }
-    catch(e){ return false; }
-  }
-  function isIOSDevice(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
-
-  window.addEventListener("beforeinstallprompt", function(e){
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    if(state.view === "home"){ render(); }
-  });
-  window.addEventListener("appinstalled", function(){
-    deferredInstallPrompt = null;
-    lsSet("install_dismissed", true);
-  });
-
-  // ---------------- STATE ----------------
+  // ---------------- STATE ТА ТЕМИ ----------------
   var state = lsGet("state") || { view: "home", day: null };
   function saveState(){ lsSet("state", state); }
 
-  // ---------------- ЛОГІКА ПОДВІЙНОЇ ПРОГРЕСІЇ ----------------
+  function applyTheme(dayKey) {
+    var root = document.documentElement;
+    if(dayKey === 'day1') {
+      root.style.setProperty('--bg-solid', '#FFECF3');
+      root.style.setProperty('--bg-trans', 'rgba(255, 236, 243, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFECF3 0%, #FFF0F6 100%)'); 
+      root.style.setProperty('--panel-2', '#FFF0F6');
+      root.style.setProperty('--panel-3', '#FFE3EE');
+      root.style.setProperty('--border', '#F7D3E3');
+      document.getElementById('themeColorMeta').setAttribute('content', '#FFECF3');
+    } else if(dayKey === 'day2') {
+      root.style.setProperty('--bg-solid', '#EAF6FD');
+      root.style.setProperty('--bg-trans', 'rgba(234, 246, 253, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #EAF6FD 0%, #E1F4FD 100%)');
+      root.style.setProperty('--panel-2', '#E1F4FD');
+      root.style.setProperty('--panel-3', '#CDEBFE');
+      root.style.setProperty('--border', '#B9E0F8');
+      document.getElementById('themeColorMeta').setAttribute('content', '#EAF6FD');
+    } else if(dayKey === 'day3') {
+      root.style.setProperty('--bg-solid', '#F3ECFB');
+      root.style.setProperty('--bg-trans', 'rgba(243, 236, 251, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #F3ECFB 0%, #EFE5FB 100%)');
+      root.style.setProperty('--panel-2', '#EFE5FB');
+      root.style.setProperty('--panel-3', '#E1D0F8');
+      root.style.setProperty('--border', '#D2BCEE');
+      document.getElementById('themeColorMeta').setAttribute('content', '#F3ECFB');
+    } else {
+      // Головний екран: градієнт від рожевого до небесно-голубого
+      root.style.setProperty('--bg-solid', '#FFE1EC');
+      root.style.setProperty('--bg-trans', 'rgba(255, 225, 236, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFE1EC 0%, #E1F4FD 100%)');
+      root.style.setProperty('--panel-2', 'rgba(255,255,255,0.65)');
+      root.style.setProperty('--panel-3', 'rgba(255,255,255,0.85)');
+      root.style.setProperty('--border', '#E1E4E8');
+      document.getElementById('themeColorMeta').setAttribute('content', '#FFE1EC');
+    }
+  }
+
+  // ---------------- ЛОГІКА ПРОГРЕСІЇ ----------------
   function shouldFlag(exercise, last){
     if(!last || exercise.type !== "weight" || exercise.repsMax == null) return false;
     var sets = (last.sets || []).filter(function(s){ return s && s.reps !== null && s.reps !== "" && s.reps !== undefined; });
@@ -1036,7 +892,9 @@
     return setsLabel + " × " + repsLabel;
   }
 
-  // ---------------- МЕДІА ВПРАВИ (фото/відео) ----------------
+  // ---------------- МЕДІА ВПРАВИ ----------------
+  function esc(str){ return String(str == null ? "" : str).replace(/"/g, "&quot;"); }
+  
   function detectMediaType(url){
     if(!url) return null;
     var u = url.toLowerCase();
@@ -1049,81 +907,31 @@
     var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([A-Za-z0-9_-]{6,})/);
     return m ? ("https://www.youtube.com/embed/" + m[1]) : null;
   }
-  function vimeoEmbedUrl(url){
-    var m = url.match(/vimeo\.com\/(\d+)/);
-    return m ? ("https://player.vimeo.com/video/" + m[1]) : null;
-  }
   function buildMediaEmbedHTML(url){
+    if(!url) return '';
     var type = detectMediaType(url);
     if(type === "youtube"){
       var yt = youtubeEmbedUrl(url);
-      if(yt) return '<div class="ex-media-frame"><iframe src="' + yt + '" allowfullscreen loading="lazy"></iframe></div>';
-    }
-    if(type === "vimeo"){
-      var vm = vimeoEmbedUrl(url);
-      if(vm) return '<div class="ex-media-frame"><iframe src="' + vm + '" allowfullscreen loading="lazy"></iframe></div>';
+      if(yt) {
+        var ytID = yt.split('/').pop();
+        return '<div class="ex-media-frame"><iframe src="' + yt + '?autoplay=1&mute=1&loop=1&playlist=' + ytID + '&controls=0&playsinline=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>';
+      }
     }
     if(type === "video"){
-      return '<div class="ex-media-frame"><video src="' + esc(url) + '" controls playsinline></video></div>';
+      return '<div class="ex-media-frame"><video src="' + esc(url) + '" autoplay loop muted playsinline></video></div>';
     }
     return '<div class="ex-media-frame"><img src="' + esc(url) + '" alt="" loading="lazy"></div>';
-  }
-  function buildMediaSectionHTML(ex, media){
-    var html = '';
-    if(media){ html += buildMediaEmbedHTML(media); }
-    html += '<button type="button" class="ex-media-toggle" data-exid="' + ex.id + '">' + ICONS.camera +
-      '<span>' + (media ? "Змінити фото/відео" : "Додати фото/відео") + '</span></button>';
-    html += '<div class="ex-media-editor" data-exid="' + ex.id + '">' +
-      '<div class="ex-media-editor-row">' + ICONS.link +
-        '<input type="url" class="ex-media-input" placeholder="Встав посилання (URL) на фото чи відео / YouTube" value="' + esc(media || "") + '">' +
-      '</div>' +
-      '<div class="ex-media-editor-actions">' +
-        (media ? '<button type="button" class="ex-media-remove-btn" data-exid="' + ex.id + '">Видалити</button>' : '<span></span>') +
-        '<button type="button" class="ex-media-save-btn" data-exid="' + ex.id + '">Зберегти</button>' +
-      '</div>' +
-    '</div>';
-    return html;
   }
 
   // ---------------- РЕЖИМ ВІДПОЧИНКУ (ТАЙМЕР) ----------------
   var TIMER_PRESETS = [30, 45, 60, 90, 120, 180];
-  var restTimer = {
-    total: lsGet("timer_last_duration") || 90,
-    remaining: null,
-    endAt: null,
-    running: false,
-    interval: null
-  };
+  var restTimer = { total: lsGet("timer_last_duration") || 90, remaining: null, endAt: null, running: false, interval: null };
   var RING_CIRCUMFERENCE = 2 * Math.PI * 52;
 
   function formatMMSS(s){
     s = Math.max(0, Math.round(s));
     var m = Math.floor(s / 60), sec = s % 60;
     return (m < 10 ? "0" : "") + m + ":" + (sec < 10 ? "0" : "") + sec;
-  }
-
-  function vibrateDevice(){
-    try{ if(navigator.vibrate){ navigator.vibrate([250,120,250,120,400]); } }catch(e){}
-  }
-
-  function playBeepSequence(){
-    try{
-      var Ctx = window.AudioContext || window.webkitAudioContext;
-      if(!Ctx) return;
-      var ctx = new Ctx();
-      [0, 0.28, 0.56].forEach(function(t){
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.0001, ctx.currentTime + t);
-        gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + t + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.22);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + t);
-        osc.stop(ctx.currentTime + t + 0.25);
-      });
-    }catch(e){}
   }
 
   function updateTimerDisplay(){
@@ -1138,13 +946,9 @@
       ringFg.style.strokeDasharray = RING_CIRCUMFERENCE;
       ringFg.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - pct);
       var toggleBtn = document.getElementById("timerToggleBtn");
-      if(toggleBtn){
-        toggleBtn.textContent = running ? "Пауза" : (remaining > 0 && remaining < restTimer.total ? "Продовжити" : "Старт");
-      }
+      if(toggleBtn){ toggleBtn.textContent = running ? "Пауза" : (remaining > 0 && remaining < restTimer.total ? "Продовжити" : "Старт"); }
     }
-
-    var fabIcon = document.getElementById("timerFabIcon");
-    var fabText = document.getElementById("timerFabText");
+    var fabIcon = document.getElementById("timerFabIcon"), fabText = document.getElementById("timerFabText");
     if(fabIcon && fabText){
       if(running && remaining > 0){
         fabIcon.style.display = "none"; fabText.style.display = "inline"; fabText.textContent = formatMMSS(remaining);
@@ -1152,18 +956,10 @@
         fabIcon.style.display = "flex"; fabText.style.display = "none";
       }
     }
-
-    if(running && remaining <= 0){
-      finishRestTimer();
-    }
+    if(running && remaining <= 0){ finishRestTimer(); }
   }
-
   function startRestTimer(seconds){
-    if(seconds){
-      restTimer.total = seconds;
-      restTimer.remaining = seconds;
-      lsSet("timer_last_duration", seconds);
-    }
+    if(seconds){ restTimer.total = seconds; restTimer.remaining = seconds; lsSet("timer_last_duration", seconds); }
     if(restTimer.remaining == null || restTimer.remaining <= 0){ restTimer.remaining = restTimer.total; }
     restTimer.endAt = Date.now() + restTimer.remaining * 1000;
     restTimer.running = true;
@@ -1171,7 +967,6 @@
     restTimer.interval = setInterval(updateTimerDisplay, 250);
     updateTimerDisplay();
   }
-
   function pauseRestTimer(){
     if(!restTimer.running) return;
     restTimer.remaining = Math.max(0, (restTimer.endAt - Date.now()) / 1000);
@@ -1179,33 +974,26 @@
     clearInterval(restTimer.interval);
     updateTimerDisplay();
   }
-
   function resetRestTimer(){
     clearInterval(restTimer.interval);
-    restTimer.running = false;
-    restTimer.remaining = restTimer.total;
+    restTimer.running = false; restTimer.remaining = restTimer.total;
     updateTimerDisplay();
   }
-
   function adjustRestTimer(delta){
     if(restTimer.running){
-      restTimer.endAt += delta * 1000;
-      restTimer.total = Math.max(15, restTimer.total + delta);
+      restTimer.endAt += delta * 1000; restTimer.total = Math.max(15, restTimer.total + delta);
     } else {
       var base = restTimer.remaining != null ? restTimer.remaining : restTimer.total;
       base = Math.max(15, base + delta);
-      restTimer.remaining = base;
-      restTimer.total = base;
+      restTimer.remaining = base; restTimer.total = base;
     }
     updateTimerDisplay();
   }
-
   function finishRestTimer(){
     clearInterval(restTimer.interval);
-    restTimer.running = false;
-    restTimer.remaining = 0;
-    updateTimerDisplay();
-    vibrateDevice();
+    restTimer.running = false; restTimer.remaining = 0;
+    updateTimerDisplay(); 
+    vibrateDevice(); 
     playBeepSequence();
     showToast("Відпочинок завершено ✓");
   }
@@ -1220,6 +1008,8 @@
   }
 
   function render(){
+    applyTheme(state.view === "home" ? null : state.day);
+    
     if(state.view === "workout" && state.day && PROGRAM[state.day]){
       renderWorkout(state.day);
     } else if(state.view === "edit" && state.day && PROGRAM[state.day]){
@@ -1234,7 +1024,6 @@
   function renderHome(){
     var suggested = getSuggestedDay();
     var sDay = PROGRAM[suggested];
-    var showInstall = !isStandaloneMode() && !lsGet("install_dismissed") && (deferredInstallPrompt || isIOSDevice());
     var hist = getHistory();
     var histRows = hist.slice().reverse().slice(0, 15);
 
@@ -1245,19 +1034,10 @@
       BARBELL +
     '</div>';
 
-    if(showInstall){
-      html += '<div class="install-banner stagger" id="installBanner" style="animation-delay:.02s">' +
-        '<div>' + (isIOSDevice()
-          ? 'Додайте застосунок на головний екран: «Поділитися» → «На екран Домівки».'
-          : 'Встановіть застосунок на телефон, щоб відкривати його як окремий додаток.') + '</div>' +
-        (isIOSDevice() ? '' : '<button type="button" class="install-btn-sm" id="installBtn">Встановити</button>') +
-        '<button type="button" class="install-dismiss" id="installDismissBtn" title="Закрити">×</button>' +
-      '</div>';
-    }
-
-    html += '<div class="rotation-banner stagger" style="animation-delay:.04s;">' +
+    var bannerStyle = 'background: linear-gradient(120deg, var(--' + sDay.accentDim + '), var(--panel-3)); border-color: var(--' + sDay.accent + ');';
+    html += '<div class="rotation-banner stagger" style="' + bannerStyle + ' animation-delay:.04s;">' +
       '<div><div class="rb-label">Сьогодні за розкладом</div><div class="rb-day disp" style="color:var(--' + sDay.accent + ');">' + sDay.label + '</div></div>' +
-      '<button type="button" class="btn btn-primary" id="startSuggestedBtn">Почати</button>' +
+      '<button type="button" class="btn btn-primary" id="startSuggestedBtn" style="--accent:var(--' + sDay.accent + '); --accent-glow:var(--' + sDay.accent + ');">Почати</button>' +
     '</div>';
 
     Object.keys(PROGRAM).forEach(function(key, i){
@@ -1281,14 +1061,13 @@
         '</div>';
     });
 
-    // ---- Історія: календар + список ----
     html += '<div class="panel-card stagger" style="animation-delay:.3s">';
     html += '<div class="section-title">Історія тренувань</div>';
     html += '<div id="calendarInner">' + buildCalendarHTML() + '</div>';
     html += '<div class="calendar-legend">' +
-      '<span><span class="dot" style="background:var(--day1)"></span>Push</span>' +
-      '<span><span class="dot" style="background:var(--day2)"></span>Pull</span>' +
-      '<span><span class="dot" style="background:var(--day3)"></span>Legs</span>' +
+      '<span><span class="dot" style="background:var(--day1)"></span>Сідниці/Спина</span>' +
+      '<span><span class="dot" style="background:var(--day2)"></span>Ноги/Плечі</span>' +
+      '<span><span class="dot" style="background:var(--day3)"></span>Фулбоді</span>' +
     '</div>';
     html += '<div class="history-list">';
     if(histRows.length === 0){
@@ -1299,27 +1078,8 @@
         html += '<div class="history-row"><span class="dot" style="background:var(--' + h.day + ')"></span><b>' + PROGRAM[h.day].label + '</b>&nbsp;— ' + fmtShort(d) + '</div>';
       });
     }
-    html += '</div>'; // history-list
-    html += '</div>'; // panel-card
+    html += '</div></div>';
 
-    // ---- Харчування та відновлення ----
-    var kbju = getKbju();
-    html += '<div class="panel-card stagger" style="animation-delay:.33s">';
-    html += '<div class="section-title">Харчування та відновлення</div>';
-    html += '<div class="nutrition-tip">' + ICONS.leaf + '<div>' + getDailyTip() + '</div></div>';
-    html += '<div class="kbju-label">Твій орієнтовний КБЖУ (необов\'язково)</div>';
-    html += '<div class="kbju-grid">' +
-      '<label class="kbju-field"><span>Ккал</span><input type="number" inputmode="decimal" id="kbjuCal" placeholder="—" value="' + esc(kbju.cal || "") + '"></label>' +
-      '<label class="kbju-field"><span>Білки, г</span><input type="number" inputmode="decimal" id="kbjuProtein" placeholder="—" value="' + esc(kbju.protein || "") + '"></label>' +
-      '<label class="kbju-field"><span>Жири, г</span><input type="number" inputmode="decimal" id="kbjuFat" placeholder="—" value="' + esc(kbju.fat || "") + '"></label>' +
-      '<label class="kbju-field"><span>Вуглеводи, г</span><input type="number" inputmode="decimal" id="kbjuCarbs" placeholder="—" value="' + esc(kbju.carbs || "") + '"></label>' +
-      '<label class="kbju-field"><span>Вага, кг</span><input type="number" inputmode="decimal" id="kbjuWeight" placeholder="—" value="' + esc(kbju.weight || "") + '"></label>' +
-    '</div>';
-    html += '<div class="kbju-advice" id="kbjuAdvice">' + renderKbjuAdvice(kbju) + '</div>';
-    html += '<div class="kbju-note">Це загальні орієнтири на основі введених чисел, а не медична рекомендація.</div>';
-    html += '</div>';
-
-    // ---- Резервне копіювання ----
     html += '<div class="panel-card stagger" style="animation-delay:.36s">';
     html += '<div class="section-title">Резервне копіювання</div>';
     html += '<div class="backup-note">Дані зберігаються лише в цьому браузері. Збережіть файл, щоб не втратити прогрес, або перенести його на інший пристрій.</div>';
@@ -1330,16 +1090,11 @@
     '</div>';
     html += '</div>';
 
-    html += '<div class="footnote">Дані зберігаються лише на цьому пристрої (<b>LocalStorage</b>). Вправа підсвітиться теплим кольором, якщо минулого разу всі підходи досягли верхньої межі повторень — це сигнал додати вагу. Олівець на екрані тренування дозволяє змінити вправи чи діапазони повторень.</div>';
-
     app.innerHTML = html;
 
     app.querySelectorAll(".day-card").forEach(function(el){
       el.addEventListener("click", function(){
-        state.view = "workout";
-        state.day = el.getAttribute("data-day");
-        saveState();
-        render();
+        state.view = "workout"; state.day = el.getAttribute("data-day"); saveState(); render();
       });
     });
 
@@ -1348,51 +1103,12 @@
     });
 
     attachCalendarNav();
-
-    (function(){
-      var fields = { kbjuCal: "cal", kbjuProtein: "protein", kbjuFat: "fat", kbjuCarbs: "carbs", kbjuWeight: "weight" };
-      var adviceEl = document.getElementById("kbjuAdvice");
-      var saveTimeout = null;
-      function readAndUpdate(){
-        var data = {};
-        Object.keys(fields).forEach(function(id){
-          var el = document.getElementById(id);
-          data[fields[id]] = el ? el.value : "";
-        });
-        if(adviceEl){ adviceEl.innerHTML = renderKbjuAdvice(data); }
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(function(){ setKbju(data); }, 300);
-      }
-      Object.keys(fields).forEach(function(id){
-        var el = document.getElementById(id);
-        if(el){ el.addEventListener("input", readAndUpdate); }
-      });
-    })();
-
     document.getElementById("exportBtn").addEventListener("click", exportData);
     document.getElementById("importFile").addEventListener("change", function(e){
       var file = e.target.files && e.target.files[0];
       if(file){ importDataFromFile(file); }
       e.target.value = "";
     });
-
-    var installBtn = document.getElementById("installBtn");
-    if(installBtn){
-      installBtn.addEventListener("click", function(){
-        if(deferredInstallPrompt){
-          deferredInstallPrompt.prompt();
-          deferredInstallPrompt.userChoice.then(function(){ deferredInstallPrompt = null; });
-        }
-      });
-    }
-    var dismissBtn = document.getElementById("installDismissBtn");
-    if(dismissBtn){
-      dismissBtn.addEventListener("click", function(){
-        lsSet("install_dismissed", true);
-        var b = document.getElementById("installBanner");
-        if(b) b.remove();
-      });
-    }
   }
 
   function renderWorkout(dayKey){
@@ -1419,6 +1135,14 @@
       var exDraft = draft[ex.id] || [];
       var mainSetsCount = ex.optionalLastSet ? ex.sets - 1 : ex.sets;
       var filledCount = 0;
+      
+      var globalWeightVal = "";
+      if (exDraft[0] && exDraft[0].weight !== undefined && exDraft[0].weight !== null) {
+          globalWeightVal = exDraft[0].weight;
+      } else if (last && last.sets && last.sets[0] && last.sets[0].weight !== undefined && last.sets[0].weight !== null) {
+          globalWeightVal = last.sets[0].weight;
+      }
+
       for(var fi = 0; fi < mainSetsCount; fi++){
         var fs = exDraft[fi];
         if(fs && fs.reps !== null && fs.reps !== undefined && fs.reps !== "" && Number(fs.reps) > 0){ filledCount++; }
@@ -1436,53 +1160,50 @@
       html += '</div>';
 
       html += '<div class="ex-progress">';
-      for(var d = 0; d < mainSetsCount; d++){
-        html += '<div class="ex-seg' + (d < filledCount ? ' done' : '') + '"></div>';
-      }
+      for(var d = 0; d < mainSetsCount; d++){ html += '<div class="ex-seg' + (d < filledCount ? ' done' : '') + '"></div>'; }
       html += '</div>';
 
       html += '<div class="ex-last">' + lastSummary(ex, last) + '</div>';
 
-      if(flagged){
-        html += '<div class="flag-banner">' + FLAG_ICON + ' Минулого разу — межа повторень в усіх підходах. Час додати вагу.</div>';
-      }
+      if(flagged){ html += '<div class="flag-banner">' + FLAG_ICON + ' Минулого разу — межа повторень в усіх підходах. Час додати вагу.</div>'; }
 
-      html += buildMediaSectionHTML(ex, getMedia(ex.id) || ex.media);
-      if (ex.media2) {
-  html += buildMediaEmbedHTML(ex.media2);
-}
+      html += buildMediaEmbedHTML(ex.media);
+      if (ex.media2) { html += buildMediaEmbedHTML(ex.media2); }
+
+      if (ex.type === "weight") {
+        html += '<div class="global-weight-row">' +
+            '<div class="global-weight-spacer"></div>' + 
+            '<div class="field-group">' +
+                '<span class="field-label">Робоча вага</span>' +
+                '<div><input type="number" inputmode="decimal" step="0.5" class="weight-input" value="' + globalWeightVal + '" placeholder="—"><span class="unit">кг</span></div>' +
+            '</div>' +
+        '</div>';
+      } else {
+        html += '<div class="global-weight-row">' +
+            '<div class="global-weight-spacer"></div>' +
+            '<div class="bodyweight-tag">Вправа без обтяження (своя вага)</div>' +
+        '</div>';
+      }
 
       html += '<div class="sets-wrap">';
       for(var i = 0; i < ex.sets; i++){
         var isOptional = !!ex.optionalLastSet && i === ex.sets - 1;
         var setData = exDraft[i] || {};
-        var lastSetData = (last && last.sets && last.sets[i]) ? last.sets[i] : {};
-        var weightVal = (setData.weight !== undefined && setData.weight !== null) ? setData.weight :
-                         (lastSetData.weight !== undefined && lastSetData.weight !== null ? lastSetData.weight : "");
         var repsVal = (setData.reps !== undefined && setData.reps !== null) ? setData.reps : "";
 
         html += '<div class="set-row' + (isOptional ? ' optional' : '') + '" data-set="' + i + '">';
         html += '<div class="set-num-badge disp">' + (i + 1) + (isOptional ? '<span class="set-opt-dot" title="Опціонально"></span>' : '') + '</div>';
-
-        if(ex.type === "weight"){
-          html += '<div class="field-group">' +
-            '<span class="field-label">кг</span>' +
-            '<input type="number" inputmode="decimal" step="0.5" class="weight-input" value="' + weightVal + '" placeholder="—">' +
-          '</div>';
-        } else {
-          html += '<div class="bodyweight-tag" style="flex:1; text-align:center;">без ваги</div>';
-        }
-
+        
         html += '<div class="stepper" data-reps="' + repsVal + '">' +
           '<button class="reps-minus" type="button">–</button>' +
           '<input type="number" inputmode="numeric" pattern="[0-9]*" class="reps-input" value="' + repsVal + '" placeholder="0">' +
           '<button class="reps-plus" type="button">+</button>' +
         '</div>';
 
-        html += '</div>'; // set-row
+        html += '</div>'; 
       }
-      html += '</div>'; // sets-wrap
-      html += '</div>'; // exercise-card
+      html += '</div>'; 
+      html += '</div>'; 
     });
 
     if(day.cooldown){
@@ -1542,14 +1263,14 @@
       var draft = {};
       app.querySelectorAll(".exercise-card").forEach(function(card){
         var exId = card.getAttribute("data-ex");
+        var weightInput = card.querySelector(".weight-input");
+        var globalWeight = weightInput ? (weightInput.value === "" ? null : Number(weightInput.value)) : null;
         var sets = [];
         card.querySelectorAll(".set-row").forEach(function(row){
-          var weightInput = row.querySelector(".weight-input");
           var stepper = row.querySelector(".stepper");
-          var weight = weightInput ? (weightInput.value === "" ? null : Number(weightInput.value)) : null;
           var repsAttr = stepper.getAttribute("data-reps");
           var reps = repsAttr === "" ? null : Number(repsAttr);
-          sets.push({weight: weight, reps: reps});
+          sets.push({weight: globalWeight, reps: reps});
         });
         draft[exId] = sets;
       });
@@ -1608,7 +1329,6 @@
         persistDraft();
         updateProgress(card);
         if(v > 0 && !wasFilled){
-          // Щойно завершено підхід — автоматично запускаємо таймер відпочинку.
           startRestTimer(exObj ? exObj.rest : undefined);
         }
         wasFilled = v > 0;
@@ -1618,59 +1338,22 @@
       plus.addEventListener("click", function(){ press(plus); commit(current() + 1); });
 
       inputEl.addEventListener("input", function(){
-        // Оновлюємо прогрес під час набору тексту, але без повторного запуску таймера на кожній цифрі.
         var v = current();
         stepper.setAttribute("data-reps", inputEl.value === "" ? "" : String(v));
         persistDraft();
         updateProgress(card);
+        if(v > 0 && !wasFilled){
+          startRestTimer(exObj ? exObj.rest : undefined);
+        }
+        wasFilled = v > 0;
       });
       inputEl.addEventListener("blur", function(){ commit(current()); });
       inputEl.addEventListener("keydown", function(e){ if(e.key === "Enter"){ inputEl.blur(); } });
     });
 
-    app.querySelectorAll(".ex-media-toggle").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        var exid = btn.getAttribute("data-exid");
-        var editor = app.querySelector('.ex-media-editor[data-exid="' + exid + '"]');
-        if(editor){
-          editor.classList.toggle("show");
-          if(editor.classList.contains("show")){
-            var input = editor.querySelector(".ex-media-input");
-            if(input) input.focus();
-          }
-        }
-      });
-    });
-    app.querySelectorAll(".ex-media-save-btn").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        var exid = btn.getAttribute("data-exid");
-        var editor = btn.closest(".ex-media-editor");
-        var input = editor.querySelector(".ex-media-input");
-        var url = input.value.trim();
-        setMedia(exid, url || null);
-        showToast(url ? "Медіа збережено ✓" : "Посилання порожнє");
-        render();
-      });
-    });
-    app.querySelectorAll(".ex-media-remove-btn").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        var exid = btn.getAttribute("data-exid");
-        setMedia(exid, null);
-        showToast("Медіа видалено");
-        render();
-      });
-    });
-    app.querySelectorAll(".ex-media-frame img").forEach(function(img){
-      img.addEventListener("error", function(){
-        var frame = img.closest(".ex-media-frame");
-        if(frame){ frame.innerHTML = '<div class="ex-media-error">Не вдалося завантажити медіа за цим посиланням</div>'; }
-      });
-    });
-
     document.getElementById("resetBtn").addEventListener("click", function(){
       if(confirm("Очистити всі введені сьогодні дані для цього дня?")){
-        clearDraft(dayKey);
-        render();
+        clearDraft(dayKey); render();
       }
     });
 
@@ -1682,30 +1365,21 @@
       exercises.forEach(function(ex){
         var sets = draft[ex.id] || [];
         var hasData = sets.some(function(s){ return (s.reps !== null && s.reps !== undefined) || (s.weight !== null && s.weight !== undefined); });
-        if(hasData){
-          setLast(ex.id, {date: date, sets: sets});
-          anySaved = true;
-        }
+        if(hasData){ setLast(ex.id, {date: date, sets: sets}); anySaved = true; }
       });
 
       if(anySaved){
-        setDayDate(dayKey, date);
-        clearDraft(dayKey);
-        addHistoryEntry(dayKey);
+        setDayDate(dayKey, date); clearDraft(dayKey); addHistoryEntry(dayKey);
         showToast("Тренування збережено ✓");
-      } else {
-        showToast("Немає введених даних");
-      }
+      } else { showToast("Немає введених даних"); }
 
       state.view = "home"; state.day = null; saveState();
       setTimeout(render, anySaved ? 500 : 0);
     });
 
-    // ---- Таймер відпочинку ----
     var timerOverlay = document.getElementById("timerOverlay");
     document.getElementById("timerFab").addEventListener("click", function(){
-      timerOverlay.classList.add("show");
-      updateTimerDisplay();
+      timerOverlay.classList.add("show"); updateTimerDisplay();
     });
     document.getElementById("timerCloseBtn").addEventListener("click", function(){
       timerOverlay.classList.remove("show");
@@ -1714,9 +1388,7 @@
       if(e.target === timerOverlay){ timerOverlay.classList.remove("show"); }
     });
     app.querySelectorAll(".timer-preset-btn").forEach(function(btn){
-      btn.addEventListener("click", function(){
-        startRestTimer(Number(btn.getAttribute("data-sec")));
-      });
+      btn.addEventListener("click", function(){ startRestTimer(Number(btn.getAttribute("data-sec"))); });
     });
     document.getElementById("timerToggleBtn").addEventListener("click", function(){
       if(restTimer.running){ pauseRestTimer(); } else { startRestTimer(); }
@@ -1727,12 +1399,6 @@
   }
 
   // ---------------- РЕДАГУВАННЯ ПРОГРАМИ ----------------
-  function blankExercise(){
-    return { id: "custom_" + Date.now() + "_" + Math.floor(Math.random() * 1000), name: "", desc: null, sets: 4, repsMin: 8, repsMax: 12, type: "weight", optionalLastSet: false };
-  }
-
-  function esc(str){ return String(str == null ? "" : str).replace(/"/g, "&quot;"); }
-
   function buildEditorCardHTML(ex){
     return '<div class="editor-card" data-exid="' + ex.id + '">' +
       '<div class="editor-row-top">' +
@@ -1782,31 +1448,22 @@
   }
 
   function attachEditorEvents(dayKey){
-    function goBackToWorkout(){
-      state.view = "workout"; state.day = dayKey; saveState(); render();
-    }
-
+    function goBackToWorkout(){ state.view = "workout"; state.day = dayKey; saveState(); render(); }
     document.getElementById("cancelEditBtn").addEventListener("click", goBackToWorkout);
     document.getElementById("cancelEditBtn2").addEventListener("click", goBackToWorkout);
 
     document.getElementById("editorList").addEventListener("click", function(e){
       var del = e.target.closest(".ed-delete");
-      if(del){
-        var card = del.closest(".editor-card");
-        if(card) card.remove();
-      }
+      if(del){ var card = del.closest(".editor-card"); if(card) card.remove(); }
     });
 
     document.getElementById("addExBtn").addEventListener("click", function(){
-      var addBtn = document.getElementById("addExBtn");
-      addBtn.insertAdjacentHTML("beforebegin", buildEditorCardHTML(blankExercise()));
+      var blank = { id: "custom_" + Date.now(), name: "", sets: 4, repsMin: 8, repsMax: 12, type: "weight", optionalLastSet: false };
+      document.getElementById("addExBtn").insertAdjacentHTML("beforebegin", buildEditorCardHTML(blank));
     });
 
     document.getElementById("restoreDefaultBtn").addEventListener("click", function(){
-      if(confirm("Відновити стандартний список вправ для цього дня? Ваші власні зміни буде видалено.")){
-        clearExercises(dayKey);
-        renderEditor(dayKey);
-      }
+      if(confirm("Відновити стандартний список вправ?")){ clearExercises(dayKey); renderEditor(dayKey); }
     });
 
     document.getElementById("saveEditBtn").addEventListener("click", function(){
@@ -1821,7 +1478,7 @@
         var repsMin = rMinRaw === "" ? null : Number(rMinRaw);
         var repsMax = rMaxRaw === "" ? null : Number(rMaxRaw);
         var optionalLastSet = card.querySelector(".ed-optional").checked;
-        var item = { id: card.getAttribute("data-exid"), name: name, desc: null, sets: sets, repsMin: repsMin, repsMax: repsMax, type: type, optionalLastSet: optionalLastSet };
+        var item = { id: card.getAttribute("data-exid"), name: name, sets: sets, repsMin: repsMin, repsMax: repsMax, type: type, optionalLastSet: optionalLastSet };
         if(type === "bodyweight" && repsMax == null){ item.note = "До відмови"; }
         list.push(item);
       });
@@ -1839,9 +1496,12 @@
     setTimeout(function(){ toast.classList.remove("show"); }, 1800);
   }
 
-  setupPWA();
+  // Запуск програми
   render();
 })();
+} catch (e) {
+  document.body.innerHTML = '<div style="padding:20px; text-align:center; margin-top:50px;"><b>Сталася помилка запуску</b><br>Очистіть історію/кеш браузера для цього файлу і спробуйте знову.<br><br><small>' + e.message + '</small></div>';
+}
 </script>
 </body>
 </html>
