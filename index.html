@@ -412,12 +412,28 @@
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
 
+  /* ---------- СІЛЬНА ВІЗУАЛІЗАЦІЯ СПАЛАХУ ДЛЯ IPHONE ---------- */
+  .flash-overlay {
+    position: fixed; inset: 0; z-index: 99999; pointer-events: none;
+    opacity: 0;
+    animation: flashAnim3 1.8s ease-in-out forwards;
+  }
+  @keyframes flashAnim3 {
+    0% { opacity: 0; }
+    15% { opacity: 0.55; }
+    30% { opacity: 0; }
+    45% { opacity: 0.55; }
+    60% { opacity: 0; }
+    75% { opacity: 0.55; }
+    90%, 100% { opacity: 0; }
+  }
+
   /* ---------- REST TIMER (NEW FAB) ---------- */
   .timer-fab{
     position:fixed;
     right:0;
-    top: 50%; /* Чітко посередині екрану */
-    transform: translateY(-50%) translateX(calc(100% - 24px)); /* Схований, видно лише 24px */
+    top: 50%;
+    transform: translateY(-50%) translateX(calc(100% - 24px));
     height:54px;
     padding: 0 16px 0 12px;
     border-radius:27px 0 0 27px;
@@ -429,7 +445,6 @@
     z-index:45;
     opacity: 0.6;
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.4s ease, box-shadow 0.4s ease;
-    will-change: transform;
   }
   .timer-fab.running {
     transform: translateY(-50%) translateX(0);
@@ -529,6 +544,8 @@
 try {
 (function(){
   "use strict";
+
+  var autoTimerTimeout = null;
 
   // ---------------- ЗВУК ТА ВІБРАЦІЯ ДЛЯ iOS/ANDROID ----------------
   var audioCtx = null;
@@ -1019,6 +1036,15 @@ try {
     updateTimerDisplay(); 
     vibrateDevice(); 
     playBeepSequence();
+    
+    // Візуальний спалах (3 рази) коліром поточного дня
+    var flash = document.createElement("div");
+    flash.className = "flash-overlay";
+    var currentDay = state.day ? PROGRAM[state.day] : null;
+    flash.style.backgroundColor = currentDay ? "var(--" + currentDay.accent + ")" : "var(--primary)";
+    document.body.appendChild(flash);
+    setTimeout(function(){ if(flash.parentNode) flash.remove(); }, 1900);
+    
     showToast("Відпочинок завершено ✓");
   }
 
@@ -1345,6 +1371,18 @@ try {
         return isNaN(v) ? 0 : v;
       }
       var wasFilled = current() > 0;
+      var autoTimerTimeout = null;
+
+      function triggerAutoTimer(v) {
+        if (v > 0 && !restTimer.running) {
+          clearTimeout(autoTimerTimeout);
+          autoTimerTimeout = setTimeout(function() {
+            startRestTimer(exObj ? exObj.rest : undefined);
+          }, 3000); // Таймер вмикається через 3 секунди після останнього введення
+        } else if (v === 0) {
+          clearTimeout(autoTimerTimeout);
+        }
+      }
 
       function commit(v){
         if(v < 0) v = 0;
@@ -1352,9 +1390,7 @@ try {
         inputEl.value = v > 0 ? String(v) : "";
         persistDraft();
         updateProgress(card);
-        if(v > 0 && !wasFilled){
-          startRestTimer(exObj ? exObj.rest : undefined);
-        }
+        triggerAutoTimer(v);
         wasFilled = v > 0;
       }
       function press(btn){ btn.classList.remove("pressed"); void btn.offsetWidth; btn.classList.add("pressed"); }
@@ -1366,9 +1402,7 @@ try {
         stepper.setAttribute("data-reps", inputEl.value === "" ? "" : String(v));
         persistDraft();
         updateProgress(card);
-        if(v > 0 && !wasFilled){
-          startRestTimer(exObj ? exObj.rest : undefined);
-        }
+        triggerAutoTimer(v);
         wasFilled = v > 0;
       });
       inputEl.addEventListener("blur", function(){ commit(current()); });
