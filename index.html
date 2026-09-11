@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Glow Up">
-<meta name="theme-color" content="#FFE1EC" id="themeColorMeta">
+<meta name="theme-color" content="#FFF0F5" id="themeColorMeta">
 <title>My Glow Up training programme</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -17,23 +17,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: linear-gradient(145deg, #FFE1EC 0%, #E1F4FD 100%);
-    --bg-solid: #FFE1EC;
-    --bg-trans: rgba(255, 225, 236, 0);
+    --bg: linear-gradient(145deg, #FFF0F5 0%, #EAF7FE 100%);
+    --bg-solid: #FFF0F5;
+    --bg-trans: rgba(255, 240, 245, 0);
     --panel:#FFFFFF;
     --panel-2:rgba(255,255,255,0.65);
     --panel-3:rgba(255,255,255,0.85);
-    --border:#E1E4E8;
+    --border:#E8ECF1;
     
     --text:#5B4356;
     --text-dim:#A688A0;
     --text-dim-2:#CBACC3;
-    --primary:#FF8FB4;
-    --primary-dim:#FFE1EC;
+    --primary:#FFA6C5;
+    --primary-dim:#FFF0F5;
     
-    --day1:#FF8FB4;       --day1-dim:#FFE1EC;       --day1-soft:rgba(255,143,180,0.16);
-    --day2:#59C1EE;       --day2-dim:#E1F4FD;       --day2-soft:rgba(89,193,238,0.16);
-    --day3:#B393E8;       --day3-dim:#EFE5FB;       --day3-soft:rgba(179,147,232,0.16);
+    --day1:#FFA6C5;       --day1-dim:#FFF0F5;       --day1-soft:rgba(255,166,197,0.16);
+    --day2:#7DD0F4;       --day2-dim:#EAF7FE;       --day2-soft:rgba(125,208,244,0.16);
+    --day3:#C2A9EE;       --day3-dim:#F2ECFB;       --day3-soft:rgba(194,169,238,0.16);
     --flag:#FFB454;
     
     --safe-top: env(safe-area-inset-top, 0px);
@@ -94,10 +94,10 @@
   .home-hero{ margin-bottom:22px; }
   .home-hero h1{
     font-size:clamp(26px, 8vw, 40px); line-height:1.04; text-transform:uppercase;
-    background:linear-gradient(100deg, #C6417B 0%, var(--day1) 55%, #E85A96 100%);
+    background:linear-gradient(100deg, #E65A95 0%, var(--day1) 55%, #F07EAB 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
     display:inline-block;
-    filter:drop-shadow(0 2px 10px rgba(255,143,180,0.35));
+    filter:drop-shadow(0 2px 10px rgba(255,166,197,0.35));
     letter-spacing:0.005em;
   }
   .home-hero .tagline{ color:var(--text-dim); font-size:14px; margin-top:10px; width: 100%; line-height:1.5; }
@@ -860,37 +860,37 @@ try {
   function applyTheme(dayKey) {
     var root = document.documentElement;
     if(dayKey === 'day1') {
-      root.style.setProperty('--bg-solid', '#FFECF3');
-      root.style.setProperty('--bg-trans', 'rgba(255, 236, 243, 0)');
-      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFECF3 0%, #FFF0F6 100%)'); 
-      root.style.setProperty('--panel-2', '#FFF0F6');
-      root.style.setProperty('--panel-3', '#FFE3EE');
-      root.style.setProperty('--border', '#F7D3E3');
-      document.getElementById('themeColorMeta').setAttribute('content', '#FFECF3');
+      root.style.setProperty('--bg-solid', '#FFF0F5');
+      root.style.setProperty('--bg-trans', 'rgba(255, 240, 245, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFF0F5 0%, #FFF5F8 100%)'); 
+      root.style.setProperty('--panel-2', '#FFF5F8');
+      root.style.setProperty('--panel-3', '#FFEAEE');
+      root.style.setProperty('--border', '#FAD9E3');
+      document.getElementById('themeColorMeta').setAttribute('content', '#FFF0F5');
     } else if(dayKey === 'day2') {
-      root.style.setProperty('--bg-solid', '#EAF6FD');
-      root.style.setProperty('--bg-trans', 'rgba(234, 246, 253, 0)');
-      root.style.setProperty('--bg', 'linear-gradient(145deg, #EAF6FD 0%, #E1F4FD 100%)');
-      root.style.setProperty('--panel-2', '#E1F4FD');
-      root.style.setProperty('--panel-3', '#CDEBFE');
-      root.style.setProperty('--border', '#B9E0F8');
-      document.getElementById('themeColorMeta').setAttribute('content', '#EAF6FD');
+      root.style.setProperty('--bg-solid', '#EAF7FE');
+      root.style.setProperty('--bg-trans', 'rgba(234, 247, 254, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #EAF7FE 0%, #F2FAFF 100%)');
+      root.style.setProperty('--panel-2', '#F2FAFF');
+      root.style.setProperty('--panel-3', '#E0F3FE');
+      root.style.setProperty('--border', '#C6E8F9');
+      document.getElementById('themeColorMeta').setAttribute('content', '#EAF7FE');
     } else if(dayKey === 'day3') {
-      root.style.setProperty('--bg-solid', '#F3ECFB');
-      root.style.setProperty('--bg-trans', 'rgba(243, 236, 251, 0)');
-      root.style.setProperty('--bg', 'linear-gradient(145deg, #F3ECFB 0%, #EFE5FB 100%)');
-      root.style.setProperty('--panel-2', '#EFE5FB');
-      root.style.setProperty('--panel-3', '#E1D0F8');
-      root.style.setProperty('--border', '#D2BCEE');
-      document.getElementById('themeColorMeta').setAttribute('content', '#F3ECFB');
+      root.style.setProperty('--bg-solid', '#F2ECFB');
+      root.style.setProperty('--bg-trans', 'rgba(242, 236, 251, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #F2ECFB 0%, #F7F3FD 100%)');
+      root.style.setProperty('--panel-2', '#F7F3FD');
+      root.style.setProperty('--panel-3', '#EBE0F8');
+      root.style.setProperty('--border', '#DCD0F0');
+      document.getElementById('themeColorMeta').setAttribute('content', '#F2ECFB');
     } else {
-      root.style.setProperty('--bg-solid', '#FFE1EC');
-      root.style.setProperty('--bg-trans', 'rgba(255, 225, 236, 0)');
-      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFE1EC 0%, #E1F4FD 100%)');
+      root.style.setProperty('--bg-solid', '#FFF0F5');
+      root.style.setProperty('--bg-trans', 'rgba(255, 240, 245, 0)');
+      root.style.setProperty('--bg', 'linear-gradient(145deg, #FFF0F5 0%, #EAF7FE 100%)');
       root.style.setProperty('--panel-2', 'rgba(255,255,255,0.65)');
       root.style.setProperty('--panel-3', 'rgba(255,255,255,0.85)');
-      root.style.setProperty('--border', '#E1E4E8');
-      document.getElementById('themeColorMeta').setAttribute('content', '#FFE1EC');
+      root.style.setProperty('--border', '#E8ECF1');
+      document.getElementById('themeColorMeta').setAttribute('content', '#FFF0F5');
     }
   }
 
@@ -1037,7 +1037,6 @@ try {
     vibrateDevice(); 
     playBeepSequence();
     
-    // Візуальний спалах (3 рази) коліром поточного дня
     var flash = document.createElement("div");
     flash.className = "flash-overlay";
     var currentDay = state.day ? PROGRAM[state.day] : null;
@@ -1080,7 +1079,7 @@ try {
     var html = '';
     html += '<div class="home-hero">' +
       '<h1 class="disp">My Glow Up training programme</h1>' +
-      '<div class="tagline">Акцент на сідниці, поставу та тонус. 3 тренування на тиждень — програма сама підкаже, коли час додати вагу.</div>' +
+      '<div class="tagline">Акцент на сідниці, поставу та тонус. 3 тренування на тиждень – програма сама підкаже, коли час додати вагу.</div>' +
       BARBELL +
     '</div>';
 
@@ -1378,7 +1377,7 @@ try {
           clearTimeout(autoTimerTimeout);
           autoTimerTimeout = setTimeout(function() {
             startRestTimer(exObj ? exObj.rest : undefined);
-          }, 3000); // Таймер вмикається через 3 секунди після останнього введення
+          }, 2000); 
         } else if (v === 0) {
           clearTimeout(autoTimerTimeout);
         }
