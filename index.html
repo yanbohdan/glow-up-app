@@ -6,8 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Glow Up">
-<meta name="theme-color" content="#FFF0F5" id="themeColorMeta">
+<meta name="theme-color" content="#FFE1EC" id="themeColorMeta">
 <title>My Glow Up training programme</title>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -17,23 +20,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: linear-gradient(145deg, #FFF0F5 0%, #EAF7FE 100%);
-    --bg-solid: #FFF0F5;
-    --bg-trans: rgba(255, 240, 245, 0);
+    --bg: linear-gradient(145deg, #FFE1EC 0%, #E1F4FD 100%);
+    --bg-solid: #FFE1EC;
+    --bg-trans: rgba(255, 225, 236, 0);
     --panel:#FFFFFF;
     --panel-2:rgba(255,255,255,0.65);
     --panel-3:rgba(255,255,255,0.85);
-    --border:#E8ECF1;
+    --border:#E1E4E8;
     
     --text:#5B4356;
     --text-dim:#A688A0;
     --text-dim-2:#CBACC3;
-    --primary:#FFA6C5;
-    --primary-dim:#FFF0F5;
+    --primary:#FF8FB4;
+    --primary-dim:#FFE1EC;
     
-    --day1:#FFA6C5;       --day1-dim:#FFF0F5;       --day1-soft:rgba(255,166,197,0.16);
-    --day2:#7DD0F4;       --day2-dim:#EAF7FE;       --day2-soft:rgba(125,208,244,0.16);
-    --day3:#C2A9EE;       --day3-dim:#F2ECFB;       --day3-soft:rgba(194,169,238,0.16);
+    --day1:#FF8FB4;       --day1-dim:#FFE1EC;       --day1-soft:rgba(255,143,180,0.16);
+    --day2:#59C1EE;       --day2-dim:#E1F4FD;       --day2-soft:rgba(89,193,238,0.16);
+    --day3:#B393E8;       --day3-dim:#EFE5FB;       --day3-soft:rgba(179,147,232,0.16);
     --flag:#FFB454;
     
     --safe-top: env(safe-area-inset-top, 0px);
@@ -545,6 +548,82 @@ try {
 (function(){
   "use strict";
 
+  // ---------------- GOOGLE-АКАУНТ ТА СИНХРОНІЗАЦІЯ ----------------
+  var firebaseConfig = {
+    apiKey: "AIzaSyCWwZlhlwybrxeQYjYki80I0LVe95YMN6Q",
+    authDomain: "glow-up-8230f.firebaseapp.com",
+    projectId: "glow-up-8230f",
+    storageBucket: "glow-up-8230f.firebasestorage.app",
+    messagingSenderId: "494882091130",
+    appId: "1:494882091130:web:b2654e3ed7b8934f2dcbc3"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var fbAuth = firebase.auth();
+  var fbDb = firebase.firestore();
+  var currentUser = null;
+  var syncInFlight = false;
+
+  function collectAllData(){
+    var data = {};
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(k && k.indexOf(LS_PREFIX) === 0){ data[k] = localStorage.getItem(k); }
+    }
+    return data;
+  }
+  function applyAllData(data){
+    Object.keys(data).forEach(function(k){
+      if(k && k.indexOf(LS_PREFIX) === 0){ localStorage.setItem(k, data[k]); }
+    });
+  }
+
+  var cloudSyncTimeout = null;
+  function scheduleCloudPush(){
+    if(!currentUser) return;
+    clearTimeout(cloudSyncTimeout);
+    cloudSyncTimeout = setTimeout(cloudPush, 1500);
+  }
+  function cloudPush(){
+    if(!currentUser || syncInFlight) return;
+    fbDb.collection("glowSync").doc(currentUser.uid).set({
+      data: JSON.stringify(collectAllData()),
+      updatedAt: Date.now()
+    }, {merge: true}).catch(function(){ /* тихо ігноруємо, якщо немає інтернету */ });
+  }
+  function cloudPull(cb){
+    if(!currentUser){ if(cb) cb(); return; }
+    syncInFlight = true;
+    fbDb.collection("glowSync").doc(currentUser.uid).get().then(function(snap){
+      if(snap.exists && snap.data().data){
+        applyAllData(JSON.parse(snap.data().data));
+      }
+      syncInFlight = false;
+      if(cb) cb();
+    }).catch(function(){
+      syncInFlight = false;
+      if(cb) cb();
+    });
+  }
+
+  function signInWithGoogle(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    fbAuth.signInWithPopup(provider).catch(function(err){
+      showToast("Не вдалося увійти: " + err.message);
+    });
+  }
+  function signOutUser(){
+    fbAuth.signOut();
+  }
+
+  fbAuth.onAuthStateChanged(function(user){
+    currentUser = user;
+    if(user){
+      cloudPull(render);
+    } else {
+      render();
+    }
+  });
+
   var autoTimerTimeout = null;
 
   // ---------------- ЗВУК ТА ВІБРАЦІЯ ДЛЯ iOS/ANDROID ----------------
@@ -713,10 +792,87 @@ try {
   }
   function lsSet(key, value){
     try{ localStorage.setItem(LS_PREFIX + key, JSON.stringify(value)); }catch(e){}
+    scheduleCloudPush();
   }
   function lsRemove(key){
     try{ localStorage.removeItem(LS_PREFIX + key); }catch(e){}
   }
+
+  // ---------------- GOOGLE-АКАУНТ ТА СИНХРОНІЗАЦІЯ ----------------
+  var firebaseConfig = {
+    apiKey: "AIzaSyCWwZlhlwybrxeQYjYki80I0LVe95YMN6Q",
+    authDomain: "glow-up-8230f.firebaseapp.com",
+    projectId: "glow-up-8230f",
+    storageBucket: "glow-up-8230f.firebasestorage.app",
+    messagingSenderId: "494882091130",
+    appId: "1:494882091130:web:b2654e3ed7b8934f2dcbc3"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var fbAuth = firebase.auth();
+  var fbDb = firebase.firestore();
+  var currentUser = null;
+  var syncInFlight = false;
+
+  function collectAllData(){
+    var data = {};
+    for(var i = 0; i < localStorage.length; i++){
+      var k = localStorage.key(i);
+      if(k && k.indexOf(LS_PREFIX) === 0){ data[k] = localStorage.getItem(k); }
+    }
+    return data;
+  }
+  function applyAllData(data){
+    Object.keys(data).forEach(function(k){
+      if(k && k.indexOf(LS_PREFIX) === 0){ localStorage.setItem(k, data[k]); }
+    });
+  }
+
+  var cloudSyncTimeout = null;
+  function scheduleCloudPush(){
+    if(!currentUser) return;
+    clearTimeout(cloudSyncTimeout);
+    cloudSyncTimeout = setTimeout(cloudPush, 1500);
+  }
+  function cloudPush(){
+    if(!currentUser || syncInFlight) return;
+    fbDb.collection("glowSync").doc(currentUser.uid).set({
+      data: JSON.stringify(collectAllData()),
+      updatedAt: Date.now()
+    }, {merge: true}).catch(function(){ /* тихо ігноруємо, якщо немає інтернету */ });
+  }
+  function cloudPull(cb){
+    if(!currentUser){ if(cb) cb(); return; }
+    syncInFlight = true;
+    fbDb.collection("glowSync").doc(currentUser.uid).get().then(function(snap){
+      if(snap.exists && snap.data().data){
+        applyAllData(JSON.parse(snap.data().data));
+      }
+      syncInFlight = false;
+      if(cb) cb();
+    }).catch(function(){
+      syncInFlight = false;
+      if(cb) cb();
+    });
+  }
+
+  function signInWithGoogle(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    fbAuth.signInWithPopup(provider).catch(function(err){
+      showToast("Не вдалося увійти: " + err.message);
+    });
+  }
+  function signOutUser(){
+    fbAuth.signOut();
+  }
+
+  fbAuth.onAuthStateChanged(function(user){
+    currentUser = user;
+    if(user){
+      cloudPull(render);
+    } else {
+      render();
+    }
+  });
 
   function getLast(exId){ return lsGet("last_" + exId); }
   function setLast(exId, data){ lsSet("last_" + exId, data); }
@@ -864,16 +1020,16 @@ try {
       root.style.setProperty('--bg-trans', 'rgba(255, 240, 245, 0)');
       root.style.setProperty('--bg', 'linear-gradient(145deg, #FFF0F5 0%, #FFF5F8 100%)'); 
       root.style.setProperty('--panel-2', '#FFF5F8');
-      root.style.setProperty('--panel-3', '#FFEAEE');
-      root.style.setProperty('--border', '#FAD9E3');
+      root.style.setProperty('--panel-3', '#FFE3EE');
+      root.style.setProperty('--border', '#F7D3E3');
       document.getElementById('themeColorMeta').setAttribute('content', '#FFF0F5');
     } else if(dayKey === 'day2') {
       root.style.setProperty('--bg-solid', '#EAF7FE');
       root.style.setProperty('--bg-trans', 'rgba(234, 247, 254, 0)');
       root.style.setProperty('--bg', 'linear-gradient(145deg, #EAF7FE 0%, #F2FAFF 100%)');
       root.style.setProperty('--panel-2', '#F2FAFF');
-      root.style.setProperty('--panel-3', '#E0F3FE');
-      root.style.setProperty('--border', '#C6E8F9');
+      root.style.setProperty('--panel-3', '#CDEBFE');
+      root.style.setProperty('--border', '#B9E0F8');
       document.getElementById('themeColorMeta').setAttribute('content', '#EAF7FE');
     } else if(dayKey === 'day3') {
       root.style.setProperty('--bg-solid', '#F2ECFB');
@@ -1139,6 +1295,21 @@ try {
     '</div>';
     html += '</div>';
 
+    html += '<div class="panel-card stagger" style="animation-delay:.42s">';
+    html += '<div class="section-title">Акаунт та синхронізація</div>';
+    if(currentUser){
+      html += '<div class="backup-note">Увійшли як <b style="color:var(--text);">' + esc(currentUser.email) + '</b><br>Дані автоматично синхронізуються між пристроями.</div>';
+      html += '<div class="backup-actions">' +
+        '<button type="button" class="backup-btn" id="signOutBtn">Вийти з акаунту</button>' +
+      '</div>';
+    } else {
+      html += '<div class="backup-note">Увійди через Google, щоб бачити ці дані і на телефоні, і на планшеті.</div>';
+      html += '<div class="backup-actions">' +
+        '<button type="button" class="backup-btn" id="signInBtn">Увійти через Google</button>' +
+      '</div>';
+    }
+    html += '</div>';
+
     app.innerHTML = html;
 
     app.querySelectorAll(".day-card").forEach(function(el){
@@ -1158,6 +1329,11 @@ try {
       if(file){ importDataFromFile(file); }
       e.target.value = "";
     });
+
+    var signInBtn = document.getElementById("signInBtn");
+    if(signInBtn){ signInBtn.addEventListener("click", signInWithGoogle); }
+    var signOutBtn = document.getElementById("signOutBtn");
+    if(signOutBtn){ signOutBtn.addEventListener("click", signOutUser); }
   }
 
   function renderWorkout(dayKey){
@@ -1553,8 +1729,7 @@ try {
     setTimeout(function(){ toast.classList.remove("show"); }, 1800);
   }
 
-  // Запуск програми
-  render();
+  // Запуск програми (render() тепер викликається автоматично через fbAuth.onAuthStateChanged вище)
 })();
 } catch (e) {
   document.body.innerHTML = '<div style="padding:20px; text-align:center; margin-top:50px;"><b>Сталася помилка запуску</b><br>Очистіть історію/кеш браузера для цього файлу і спробуйте знову.<br><br><small>' + e.message + '</small></div>';
