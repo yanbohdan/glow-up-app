@@ -51,7 +51,6 @@
     -webkit-overflow-scrolling: touch;
     transition: background 0.35s ease;
   }
-  #app{ transform: translateZ(0); }
   .disp{ font-family:"Bebas Neue", "Inter", sans-serif; font-weight:400; letter-spacing:0.01em; }
   #app{
     max-width:560px;
@@ -64,7 +63,7 @@
   }
   h1,h2,h3{margin:0;}
 
-  @keyframes viewIn{ from{ opacity:0; transform:translateY(10px) translateZ(0);} to{ opacity:1; transform:translateY(0) translateZ(0);} }
+  @keyframes viewIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
   #app.entering{ animation: viewIn .38s cubic-bezier(.2,.7,.3,1); }
 
   @keyframes flagGlow{
@@ -72,7 +71,7 @@
     50%{ box-shadow:0 0 0 1px rgba(255,197,61,0.55), 0 0 22px rgba(255,197,61,0.28); }
   }
 
-  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px) scale(0.98) translateZ(0);} to{ opacity:1; transform:translateY(0) scale(1) translateZ(0);} }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px) scale(0.98);} to{ opacity:1; transform:translateY(0) scale(1);} }
   @keyframes fadeIn{ from{ opacity:0;} to{ opacity:1;} }
   .stagger{ opacity:0; animation: cardIn .5s cubic-bezier(.2,.7,.3,1) forwards; }
   .exercise-card.stagger{ animation: fadeIn .3s ease-out forwards; contain:layout paint; }
@@ -84,7 +83,7 @@
   @keyframes btnPress{ 0%{ transform:scale(1);} 50%{ transform:scale(0.9);} 100%{ transform:scale(1);} }
   .stepper button.pressed{ animation: btnPress .22s ease; }
 
-  @keyframes chevronNudge{ 0%,100%{ transform:translateX(0) translateZ(0);} 50%{ transform:translateX(3px) translateZ(0);} }
+  @keyframes chevronNudge{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(3px);} }
   .day-card:hover .chevron{ animation: chevronNudge 0.9s ease-in-out infinite; }
 
   @media (prefers-reduced-motion: reduce){
@@ -164,7 +163,7 @@
     background: radial-gradient(140px 140px at 100% 0%, var(--accent-soft, transparent), transparent 70%);
     pointer-events:none;
   }
-  .day-card:active{ transform: scale(0.97) translateZ(0); }
+  .day-card:active{ transform: scale(0.97); }
   .day-card .day-left{ display:flex; align-items:center; gap:16px; position:relative; z-index:1; }
   .day-icon{
     width:54px; height:54px; border-radius:14px; flex-shrink:0;
@@ -418,7 +417,7 @@
     position:fixed;
     right:0;
     top: 50%; /* Чітко посередині екрану */
-    transform: translateY(-50%) translateX(calc(100% - 24px)) translateZ(0); /* Схований, видно лише 24px */
+    transform: translateY(-50%) translateX(calc(100% - 24px)); /* Схований, видно лише 24px */
     height:54px;
     padding: 0 16px 0 12px;
     border-radius:27px 0 0 27px;
@@ -433,7 +432,7 @@
     will-change: transform;
   }
   .timer-fab.running {
-    transform: translateY(-50%) translateX(0) translateZ(0);
+    transform: translateY(-50%) translateX(0);
     opacity: 1;
     box-shadow: -4px 6px 20px var(--accent-glow);
   }
@@ -459,9 +458,9 @@
     position:relative; width:100%; max-width:340px;
     background:linear-gradient(155deg, var(--panel-2) 0%, var(--panel) 70%);
     border:1px solid var(--border); border-radius:20px; padding:24px 20px 20px;
-    transform:translateY(12px) translateZ(0); transition:transform .2s ease;
+    transform:translateY(12px); transition:transform .2s ease;
   }
-  .timer-overlay.show .timer-panel{ transform:translateY(0) translateZ(0); }
+  .timer-overlay.show .timer-panel{ transform:translateY(0); }
   .timer-close{
     position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%;
     background:var(--panel-3); border:1px solid var(--border); color:var(--text-dim);
